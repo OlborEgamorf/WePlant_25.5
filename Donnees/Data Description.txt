@@ -1,0 +1,11 @@
+Data are extracted from Kaggle.
+
+Plant Growth Data Classification : https://www.kaggle.com/datasets/gorororororo23/plant-growth-data-classification
+A to Z Flowers - Features & Images : https://www.kaggle.com/datasets/kkhandekar/a-to-z-flowers-features-images/data
+Plant-Health-Data : https://www.kaggle.com/datasets/ziya07/plant-health-data
+Plant growth: Hydroponic and Soil Compound Dataset : https://www.kaggle.com/datasets/abtabm/plant-growthhydroponics-and-soil-compound-dataset
+Plant-Health-Monitoring : https://www.kaggle.com/datasets/ziya07/plant-health-monitoring
+ 
+ 
+
+
