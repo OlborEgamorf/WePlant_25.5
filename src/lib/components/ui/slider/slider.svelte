@@ -11,7 +11,7 @@
 
 <SliderPrimitive.Root
 	bind:value
-	class={cn("relative flex w-full touch-none select-none items-center", className)}
+	class={cn("relative flex w-full touch-none select-none items-center", className)} 
 	{...$$restProps}
 	let:thumbs
 >

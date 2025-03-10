@@ -2,25 +2,34 @@
     import Results from "$lib/components/ui/results.svelte";
     import Search from "$lib/components/ui/search.svelte";
 
-    import Tree from "$lib/assets/tree.svg"
+    type Selection = {
+        value:string,
+        label:string,
+        disabled:false
+    }
+
+    let light:number[] = $state([50])
+    let moisture:number[] = $state([50])
+    let temperture:number[] = $state([20])
+    let soil:Selection = $state({value:"loam", label:"Terre", disabled:false})
+    
+    let soilValue = $derived(soil.value)
 
 </script>
 
 
-<div class="bg-[#FFFFF6] h-screen">
+<div class="bg-[#ACE1AF] h-screen">
     <div class="bg-[#ACE1AF] h-[150px] flex items-center">
         <div class="text-center w-full text-3xl">Calculateur</div>
     </div>
 
-    <img class="fixed bottom-0 z-0 right-100 w-[100px]" src={Tree}>
-
-    <div class="grid mx-10 my-5">
-        <div>
-            <Search></Search>
+    <div class="grid mx-10 my-5 lg:mx-100 items-center">
+        <div class="col-start-1">
+            <Search bind:light={light} bind:moisture={moisture} bind:temperture={temperture} bind:soil={soil}></Search>
         </div>
 
-        <div>
-            <Results></Results>
+        <div class="col-start-2 ">
+            <Results {light} {moisture} {temperture} soil={soilValue}></Results>
         </div>
     </div>
 

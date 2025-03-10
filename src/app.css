@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
+@import "tailwindcss-animated";
  
 @layer base {
   :root {
@@ -73,5 +74,116 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-duration-\[8000ms\] {
+      animation-duration: 8000ms;
+  }
+  .animate-duration-\[8500ms\] {
+      animation-duration: 8500ms;
+  }
+  .animate-duration-\[9000ms\] {
+      animation-duration: 9000ms;
+  }
+  .animate-duration-\[9500ms\] {
+      animation-duration: 9500ms;
+  }
+  .animate-duration-\[10000ms\] {
+      animation-duration: 10000ms;
+  }
+  .animate-duration-\[10500ms\] {
+      animation-duration: 10500ms;
+  }
+  .animate-duration-\[11000ms\] {
+      animation-duration: 11000ms;
+  }
+  .animate-duration-\[11500ms\] {
+      animation-duration: 11500ms;
+  }
+  .animate-duration-\[12000ms\] {
+      animation-duration: 12000ms;
+  }
+  .animate-duration-\[12500ms\] {
+      animation-duration: 12500ms;
+  }
+  .animate-duration-\[13000ms\] {
+      animation-duration: 13000ms;
+  }
+  .animate-duration-\[13500ms\] {
+      animation-duration: 13500ms;
+  }
+  .animate-duration-\[14000ms\] {
+      animation-duration: 14000ms;
+  }
+  .animate-duration-\[14500ms\] {
+      animation-duration: 14500ms;
+  }
+  .animate-duration-\[15000ms\] {
+      animation-duration: 15000ms;
+  }
+  .animate-duration-\[15500ms\] {
+      animation-duration: 15500ms;
+  }
+  .animate-duration-\[16000ms\] {
+      animation-duration: 16000ms;
+  }
+  .animate-duration-\[16500ms\] {
+      animation-duration: 16500ms;
+  }
+  .animate-duration-\[17000ms\] {
+      animation-duration: 17000ms;
+  }
+  .animate-duration-\[17500ms\] {
+      animation-duration: 17500ms;
+  }
+  .animate-duration-\[18000ms\] {
+      animation-duration: 18000ms;
+  }
+  .animate-duration-\[18500ms\] {
+      animation-duration: 18500ms;
+  }
+  .animate-duration-\[19000ms\] {
+      animation-duration: 19000ms;
+  }
+  .animate-duration-\[19500ms\] {
+      animation-duration: 19500ms;
+  }
+  .animate-duration-\[20000ms\] {
+      animation-duration: 20000ms;
+  }
+  .animate-duration-\[20500ms\] {
+      animation-duration: 20500ms;
+  }
+  .animate-duration-\[21000ms\] {
+      animation-duration: 21000ms;
+  }
+  .animate-duration-\[21500ms\] {
+      animation-duration: 21500ms;
+  }
+  .animate-duration-\[22000ms\] {
+      animation-duration: 22000ms;
+  }
+  .animate-duration-\[22500ms\] {
+      animation-duration: 22500ms;
+  }
+  .animate-duration-\[23000ms\] {
+      animation-duration: 23000ms;
+  }
+  .animate-duration-\[23500ms\] {
+      animation-duration: 23500ms;
+  }
+  .animate-duration-\[24000ms\] {
+      animation-duration: 24000ms;
+  }
+  .animate-duration-\[24500ms\] {
+      animation-duration: 24500ms;
+  }
+  .animate-duration-\[25000ms\] {
+      animation-duration: 25000ms;
+  }
+  .animate-duration-\[25500ms\] {
+      animation-duration: 25500ms;
   }
 }
