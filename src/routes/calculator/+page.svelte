@@ -1,5 +1,6 @@
 <script lang="ts">
     import Results from "$lib/components/ui/results.svelte";
+    import ResultsAnimation from "$lib/components/ui/resultsAnimation.svelte";
     import Search from "$lib/components/ui/search.svelte";
 
     type Selection = {
@@ -24,12 +25,16 @@
     </div>
 
     <div class="grid mx-10 my-5 lg:mx-100 items-center">
-        <div class="col-start-1">
+        <div class="col-start-1 row-span-2">
             <Search bind:light={light} bind:moisture={moisture} bind:temperture={temperture} bind:soil={soil}></Search>
         </div>
 
-        <div class="col-start-2 ">
-            <Results {light} {moisture} {temperture} soil={soilValue}></Results>
+        <div class="col-start-2 row-start-1">
+            <Results></Results>
+        </div>
+
+        <div class="col-start-2 row-start-2">
+            <ResultsAnimation {light} {moisture} {temperture} soil={soilValue}></ResultsAnimation>
         </div>
     </div>
 
