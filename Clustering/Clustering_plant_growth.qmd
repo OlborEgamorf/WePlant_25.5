@@ -7,24 +7,18 @@ editor: visual
 # Clustering
 
 ```{r}
-install.packages("readxl")  # si pas déjà installé
-library(readxl)
-```
-
-```{r}
-plant_data <- read.csv2("../data/plant_moniter_health_data.csv",header=TRUE,sep=",")
+plant_data <- read.csv2("../data/plant_growth_data.csv",header=TRUE,sep=",")
 head(plant_data)
 ```
 
 ```{r}
+colnames(plant_data)
+```
 
-df_cluster <- plant_data[, c("Temperature_C", 
-                             "Humidity_.", 
-                             "Soil_Moisture_.", 
-                             "Soil_pH", 
-                             "Nutrient_Level", 
-                             "Light_Intensity_lux", 
-                             "Health_Score")]
+```{r}
+df_cluster <- plant_data[, c("Sunlight_Hours", 
+                             "Temperature", 
+                             "Humidity")]
 
 # Conversion en numérique (si besoin) 
 df_cluster[] <- lapply(df_cluster, function(x) {
@@ -33,7 +27,6 @@ df_cluster[] <- lapply(df_cluster, function(x) {
 })
 
 df_scaled <- scale(df_cluster)
-
 
 ```
 
@@ -72,7 +65,6 @@ plant_data$cluster_km <- clusters_km
 
 # Vérifier le résultat
 head(plant_data)
-
 ```
 
 ```{r}
@@ -100,7 +92,6 @@ plant_data$cluster_hc <- clusters_hc
 ```
 
 ```{r}
-
 pca_res <- prcomp(df_scaled, scale. = FALSE)
 
 # 2) Construire un data frame avec les coordonnées sur PC1 et PC2,
@@ -129,88 +120,14 @@ legend(
   pch = 19,
   title = "Clusters"
 )
-
 ```
 
 ```{r}
-# ======================
-# 1) PCA sur df_scaled
-# ======================
-pca_res <- prcomp(df_scaled, scale. = FALSE)
-# (df_scaled est déjà centré-réduit, donc scale.=FALSE ici)
+##########################################################
+# 1) Algorithme de Lloyd (k-means) - Implémentation maison
+#    avec affichage d'informations à chaque itération
+##########################################################
 
-# ======================
-# 2) Construire un data frame avec PC1, PC2, PC3 et le cluster
-# ======================
-pca_data <- data.frame(
-  PC1 = pca_res$x[, 1],
-  PC2 = pca_res$x[, 2],
-  PC3 = pca_res$x[, 3],
-  cluster = factor(km_res$cluster)  # km_res$cluster = numéros de cluster
-)
-
-# ======================
-# 3) Afficher plusieurs graphes 2D
-# ======================
-# On crée une grille 1 x 3 pour afficher 3 graphiques côte à côte
-par(mfrow = c(1, 3))
-
-# --- Graphique 1 : PC1 vs PC2
-plot(pca_data$PC1, pca_data$PC2,
-     col = pca_data$cluster, pch = 19,
-     xlab = "PC1", ylab = "PC2",
-     main = "Clusters : PC1 vs PC2")
-
-# --- Graphique 2 : PC1 vs PC3
-plot(pca_data$PC1, pca_data$PC3,
-     col = pca_data$cluster, pch = 19,
-     xlab = "PC1", ylab = "PC3",
-     main = "Clusters : PC1 vs PC3")
-
-# --- Graphique 3 : PC2 vs PC3
-plot(pca_data$PC2, pca_data$PC3,
-     col = pca_data$cluster, pch = 19,
-     xlab = "PC2", ylab = "PC3",
-     main = "Clusters : PC2 vs PC3")
-
-# ======================
-# 4) Légende (facultatif)
-# ======================
-# Vous pouvez ajouter une légende sur le dernier plot, par exemple :
-legend("topright",
-       legend = levels(pca_data$cluster),
-       col = 1:length(levels(pca_data$cluster)),
-       pch = 19,
-       title = "Clusters")
-
-```
-
-```{r}
-# Supposons que vous avez déjà :
-# 1) Un data frame ou une matrice 'df_scaled' contenant vos variables (standardisées)
-# 2) Que vous avez fait une PCA avec prcomp(df_scaled, scale. = FALSE ou TRUE)
-
-# 1) Effectuer la PCA
-pca_res <- prcomp(df_scaled, scale. = TRUE) 
-# (Si df_scaled est déjà centré-réduit, vous pouvez mettre scale. = FALSE)
-
-# 2) Extraire les loadings (coefficient de chaque variable dans chaque composante)
-loadings <- pca_res$rotation
-# C'est une matrice de taille (nombre_de_variables x nombre_de_composantes)
-
-# 3) Calculer les loadings au carré
-loadings_sq <- loadings^2
-
-# 4) Calculer la contribution en pourcentage de chaque variable à chaque composante
-#    Pour chaque composante j, on divise chaque loading^2 par la somme des loadings^2 de la colonne j
-var_contrib <- sweep(loadings_sq, 2, colSums(loadings_sq), FUN = "/") * 100
-
-# 5) Afficher la table de contributions
-var_contrib
-
-```
-
-```{r}
 # Distance euclidienne
 euclid_dist <- function(a, b) {
   sqrt(sum((a - b)^2))
@@ -241,12 +158,8 @@ lloyd_kmeans <- function(data, k = 3, max_iter = 100, seed = 123) {
   while (iter < max_iter && !all(clusters == old_clusters)) {
     iter <- iter + 1
     
-    # --> Affichage du numéro d'itération
-    cat("Iteration:", iter, "\n")
-    
-    old_clusters <- clusters
-    
     # a) Assignation : chaque point -> centre le plus proche
+    old_clusters <- clusters
     for (i in 1:n) {
       dist_vec <- sapply(1:k, function(c) euclid_dist(X[i, ], centers[c, ]))
       clusters[i] <- which.min(dist_vec)
@@ -259,6 +172,24 @@ lloyd_kmeans <- function(data, k = 3, max_iter = 100, seed = 123) {
         centers[c, ] <- colMeans(pts_cluster_c)
       }
     }
+    
+    # c) Calculer un indicateur de SSE (somme des carrés intra-cluster)
+    SSE <- 0
+    for (c in 1:k) {
+      pts_cluster_c <- X[clusters == c, , drop = FALSE]
+      if (nrow(pts_cluster_c) > 0) {
+        # Distance au centre
+        dists <- apply(pts_cluster_c, 1, function(pt) euclid_dist(pt, centers[c, ]))
+        SSE <- SSE + sum(dists^2)
+      }
+    }
+    
+    # d) Calculer le nombre de changements de cluster
+    changes <- sum(clusters != old_clusters)
+    
+    # e) Affichage du numéro d'itération et des indicateurs
+    cat(sprintf("Iteration %d | SSE = %.2f | Changements = %d\n",
+                iter, SSE, changes))
   }
   
   # Résultat
@@ -268,6 +199,14 @@ lloyd_kmeans <- function(data, k = 3, max_iter = 100, seed = 123) {
     iterations = iter
   )
 }
+
+##########################################################
+# 2) Exécution de l'algorithme sur vos données
+##########################################################
+
+# Supposez que df_scaled est un data frame/matrice numérique
+# déjà standardisé (moyenne=0, écart-type=1).
+# On fixe k=3.
 
 result_km <- lloyd_kmeans(df_scaled, k = 3, max_iter = 100, seed = 123)
 
@@ -280,6 +219,9 @@ result_km$centers
 # Nombre total d'itérations
 result_km$iterations
 
+##########################################################
+# 3) Visualisation (projection en PCA sur PC1-PC2)
+##########################################################
 
 # a) Calcul de la PCA
 pca_res <- prcomp(df_scaled, scale. = FALSE) 
@@ -321,14 +263,6 @@ legend(
   title = "Clusters"
 )
 
-```
 
-```{r}
-
-
-# 2) Écrire ce data frame modifié dans un nouveau fichier CSV
-write.csv(plant_data, file = "plantes_clusters.csv", row.names = FALSE)
-
-# 'row.names = FALSE' pour ne pas inclure la colonne de noms de lignes dans le CSV.
 
 ```
