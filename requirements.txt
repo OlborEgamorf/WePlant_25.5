@@ -4,3 +4,5 @@ matplotlib
 numpy
 plotly
 bs4
+sklearn
+scipy
