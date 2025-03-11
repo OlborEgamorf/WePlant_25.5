@@ -24,11 +24,25 @@ data = {
     "θopt_racinaires_superficiels_max": [6.8, 12.3, 23.8]
 }
 
-# Définition des types de racine disponibles
+# Définition des types de racines
 types_racine_mapping = {
     "profonds": ["θopt_racinaires_profonds", "θopt_racinaires_profonds_min", "θopt_racinaires_profonds_max"],
     "moyens": ["θopt_racinaires_moyens"],
     "superficiels": ["θopt_racinaires_superficiels", "θopt_racinaires_superficiels_min", "θopt_racinaires_superficiels_max"]
+}
+
+# Densité apparente des sols (en g/cm³)
+densite_apparente = {
+    "Sableux": 1.6,
+    "Limoneux": 1.3,
+    "Argileux": 1.1
+}
+
+# Profondeur des pots en dm
+profondeur_pots = {
+    "M": 2.5,
+    "L": 4,
+    "XL": 6
 }
 
 df = pd.DataFrame(data)
@@ -40,14 +54,17 @@ async def root():
 @app.get("/parametres_sol/")
 async def get_sol_parameters(
     sol: str = Query(..., description="Type de sol: Sableux, Limoneux, Argileux"),
-    racine: str = Query(..., description="Type de racine: Profonds, Moyens, Superficiels")
+    racine: str = Query(..., description="Type de racine: Profonds, Moyens, Superficiels"),
+    taille_pot: str = Query("M", description="Taille du pot: M, L, XL"),
+    humidity: float = Query(..., description="Humidité actuelle du sol en mm")
 ):
     """
-    Récupère les paramètres spécifiques d'un sol et d'un type de racine.
-    Exemple : /parametres_sol/?sol=Sableux&racine=profonds
+    Récupère les paramètres d'un sol et d'un type de racine,
+    puis calcule la Réserve Utile (RU) et indique si l'arrosage est nécessaire.
     """
     sol = sol.capitalize()
     racine = racine.lower()
+    taille_pot = taille_pot.upper()
 
     # Vérification du type de sol
     if sol not in df["Sol"].values:
@@ -57,10 +74,36 @@ async def get_sol_parameters(
     if racine not in types_racine_mapping:
         raise HTTPException(status_code=400, detail=f"Type de racine invalide. Choisissez parmi: {', '.join(types_racine_mapping.keys())}")
 
+    # Vérification de la taille du pot
+    if taille_pot not in profondeur_pots:
+        raise HTTPException(status_code=400, detail=f"Taille de pot invalide. Choisissez parmi: {', '.join(profondeur_pots.keys())}")
+
     # Sélection des colonnes correspondant au type de racine
     filtered_df = df[df["Sol"] == sol][["Sol"] + types_racine_mapping[racine]]
 
-    # Conversion en dictionnaire
-    params = filtered_df.to_dict(orient="records")[0]
-    
-    return {"sol": sol, "type_racine": racine, "parametres": params}
+    # Récupération de la valeur θopt correspondant à la racine choisie
+    θopt = filtered_df[types_racine_mapping[racine][0]].values[0]  # Prend la valeur moyenne
+
+    # Récupération de la densité apparente du sol
+    da = densite_apparente[sol]
+
+    # Récupération de la profondeur du pot en dm
+    z = profondeur_pots[taille_pot]
+
+    # Calcul de la Réserve Utile (RU en mm)
+    RU = θopt * da * z
+
+    # Vérification du besoin d’arrosage
+    besoin_arrosage = "Il faut arroser" if humidity < RU else "Pas besoin d'arroser"
+
+    return {
+        "sol": sol,
+        "type_racine": racine,
+        "taille_pot": taille_pot,
+        "θopt": θopt,
+        "densite_apparente": da,
+        "profondeur_pot_dm": z,
+        "RU_mm": round(RU, 2),
+        "humidite_mm": humidity,
+        "besoin_arrosage": besoin_arrosage
+    }
