@@ -78,6 +78,9 @@
 }
 
 @layer utilities {
+  .animate-duration-\[7500ms\] {
+    animation-duration: 7500ms;
+  }
   .animate-duration-\[8000ms\] {
       animation-duration: 8000ms;
   }

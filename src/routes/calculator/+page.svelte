@@ -19,12 +19,12 @@
 </script>
 
 
-<div class="bg-[#ACE1AF] h-screen">
-    <div class="bg-[#ACE1AF] h-[150px] flex items-center">
+<div class="bg-[#ACE1AF] min-h-screen">
+    <div class="bg-[#ACE1AF] h-[100px] flex items-center">
         <div class="text-center w-full text-3xl">Calculateur</div>
     </div>
 
-    <div class="grid mx-10 my-5 lg:mx-100 items-center">
+    <div class="grid mx-10 my-5 lg:mx-75 items-center">
         <div class="col-start-1 row-span-2">
             <Search bind:light={light} bind:moisture={moisture} bind:temperture={temperture} bind:soil={soil}></Search>
         </div>
