@@ -1,0 +1,13 @@
+,Sol Sableux,Sol Limoneux,Sol Argileux
+θcrit_min,10.0,15.0,20.0
+θcrit_max,12.0,17.0,22.0
+θfc,15.0,25.0,40.0
+θwp,5.0,10.0,20.0
+θcrit,11.0,16.0,21.0
+θopt_racinaires_profonds,13.0,20.5,33.0
+θopt_racinaires_profonds_min,12.5,20.0,32.5
+θopt_racinaires_profonds_max,13.5,21.0,33.5
+θopt_racinaires_moyens,14.0,23.5,38.0
+θopt_racinaires_superficiels,5.9,11.4,22.9
+θopt_racinaires_superficiels_min,5.0,10.5,22.0
+θopt_racinaires_superficiels_max,6.8,12.3,23.8

@@ -3,3 +3,7 @@ pandas
 matplotlib
 numpy
 plotly
+bs4
+scikit-learn
+scipy
+fastapi[standard]
