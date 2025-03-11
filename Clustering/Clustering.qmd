@@ -90,10 +90,6 @@ plot(hc_res, main = "Dendrogramme - Clustering hiérarchique",
 rect.hclust(hc_res, k = 3, border = "red")
 clusters_hc <- cutree(hc_res, k = 3)
 
-# Ajouter la colonne "cluster_hc" au data frame
-# Remplacez "df_plants" par le nom exact de votre data frame 
-# (par exemple "df_plants <- plant_data"), 
-# puis utilisez df_plants$cluster_hc :
 plant_data$cluster_hc <- clusters_hc
 
 
@@ -133,15 +129,9 @@ legend(
 ```
 
 ```{r}
-# ======================
-# 1) PCA sur df_scaled
-# ======================
 pca_res <- prcomp(df_scaled, scale. = FALSE)
 # (df_scaled est déjà centré-réduit, donc scale.=FALSE ici)
 
-# ======================
-# 2) Construire un data frame avec PC1, PC2, PC3 et le cluster
-# ======================
 pca_data <- data.frame(
   PC1 = pca_res$x[, 1],
   PC2 = pca_res$x[, 2],
@@ -149,9 +139,6 @@ pca_data <- data.frame(
   cluster = factor(km_res$cluster)  # km_res$cluster = numéros de cluster
 )
 
-# ======================
-# 3) Afficher plusieurs graphes 2D
-# ======================
 # On crée une grille 1 x 3 pour afficher 3 graphiques côte à côte
 par(mfrow = c(1, 3))
 
@@ -173,10 +160,7 @@ plot(pca_data$PC2, pca_data$PC3,
      xlab = "PC2", ylab = "PC3",
      main = "Clusters : PC2 vs PC3")
 
-# ======================
-# 4) Légende (facultatif)
-# ======================
-# Vous pouvez ajouter une légende sur le dernier plot, par exemple :
+
 legend("topright",
        legend = levels(pca_data$cluster),
        col = 1:length(levels(pca_data$cluster)),
@@ -186,10 +170,6 @@ legend("topright",
 ```
 
 ```{r}
-# Supposons que vous avez déjà :
-# 1) Un data frame ou une matrice 'df_scaled' contenant vos variables (standardisées)
-# 2) Que vous avez fait une PCA avec prcomp(df_scaled, scale. = FALSE ou TRUE)
-
 # 1) Effectuer la PCA
 pca_res <- prcomp(df_scaled, scale. = TRUE) 
 # (Si df_scaled est déjà centré-réduit, vous pouvez mettre scale. = FALSE)
@@ -202,7 +182,6 @@ loadings <- pca_res$rotation
 loadings_sq <- loadings^2
 
 # 4) Calculer la contribution en pourcentage de chaque variable à chaque composante
-#    Pour chaque composante j, on divise chaque loading^2 par la somme des loadings^2 de la colonne j
 var_contrib <- sweep(loadings_sq, 2, colSums(loadings_sq), FUN = "/") * 100
 
 # 5) Afficher la table de contributions
@@ -324,11 +303,6 @@ legend(
 ```
 
 ```{r}
-
-
-# 2) Écrire ce data frame modifié dans un nouveau fichier CSV
 write.csv(plant_data, file = "plantes_clusters.csv", row.names = FALSE)
-
-# 'row.names = FALSE' pour ne pas inclure la colonne de noms de lignes dans le CSV.
 
 ```

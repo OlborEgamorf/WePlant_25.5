@@ -82,10 +82,6 @@ plot(hc_res, main = "Dendrogramme - Clustering hiérarchique",
 rect.hclust(hc_res, k = 3, border = "red")
 clusters_hc <- cutree(hc_res, k = 3)
 
-# Ajouter la colonne "cluster_hc" au data frame
-# Remplacez "df_plants" par le nom exact de votre data frame 
-# (par exemple "df_plants <- plant_data"), 
-# puis utilisez df_plants$cluster_hc :
 plant_data$cluster_hc <- clusters_hc
 
 
@@ -123,11 +119,6 @@ legend(
 ```
 
 ```{r}
-##########################################################
-# 1) Algorithme de Lloyd (k-means) - Implémentation maison
-#    avec affichage d'informations à chaque itération
-##########################################################
-
 # Distance euclidienne
 euclid_dist <- function(a, b) {
   sqrt(sum((a - b)^2))
@@ -200,14 +191,6 @@ lloyd_kmeans <- function(data, k = 3, max_iter = 100, seed = 123) {
   )
 }
 
-##########################################################
-# 2) Exécution de l'algorithme sur vos données
-##########################################################
-
-# Supposez que df_scaled est un data frame/matrice numérique
-# déjà standardisé (moyenne=0, écart-type=1).
-# On fixe k=3.
-
 result_km <- lloyd_kmeans(df_scaled, k = 3, max_iter = 100, seed = 123)
 
 # Les clusters attribués à chaque observation
@@ -218,10 +201,6 @@ result_km$centers
 
 # Nombre total d'itérations
 result_km$iterations
-
-##########################################################
-# 3) Visualisation (projection en PCA sur PC1-PC2)
-##########################################################
 
 # a) Calcul de la PCA
 pca_res <- prcomp(df_scaled, scale. = FALSE) 
@@ -265,4 +244,8 @@ legend(
 
 
 
+```
+
+```{r}
+write.csv(plant_data, file = "plantes_growth_clusters.csv", row.names = FALSE)
 ```
