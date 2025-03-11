@@ -1,9 +1,7 @@
 <script lang="ts">
     import Results from "$lib/components/ui/results.svelte";
-    import Selection from "./selection.svelte";
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
-    import Toggle from "./toggle.svelte";
 
     let soils:Selects[] = [
         {value:"clay", label:"Argile"},

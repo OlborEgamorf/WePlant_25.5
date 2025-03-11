@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Results from "$lib/components/ui/results.svelte";
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
     import Toggle from "./toggle.svelte";
@@ -86,8 +85,8 @@
         </div>
     </div>
 
-    <div class="col-start-2 row-start-1 row-span-2">
-        <img src={Pot} class="w-[200px]" alt="pot">
-        <img src={Tree} alt="">
+    <div class="col-start-2 row-start-1 row-span-2 relative">
+        <img src={Pot} class="w-[200px] absolute top-0 left-0 z-5" alt="pot">
+        <img src={Tree} class="w-[200px] absolute -top-46 left-0" alt="">
     </div>
 </div>
