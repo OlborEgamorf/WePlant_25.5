@@ -4,6 +4,7 @@
     import Toggle from "./toggle.svelte";
     import Pot from "$lib/assets/pot.svg"
     import Tree from "$lib/assets/tree.svg"
+    import Roots from "$lib/assets/roots.svg"
 
     let soils:Selects[] = [
         {value:"loam", label:"Terre"},
@@ -23,8 +24,9 @@
         {value:"long", label:"Longues"},
     ]
 
-    let soil:string = "loam"
-    let root:string = "medium"
+    let soil:string = $state("loam")
+    let root:string = $state("medium")
+    let pot:string = $state("5l")
 
     let minMoisture:number = 0
     let maxMoisture:number = 100
@@ -45,6 +47,24 @@
         })
     })
 
+    $effect(() => {
+        soil;root;pot;moisture
+
+        fetch()
+    })
+
+    function setPotClass(pot:string) {
+        if (pot == "5l") return "transition-all w-[150px] absolute top-0 left-6 z-6" 
+        else if (pot == "50l") return "transition-all w-[175px] absolute top-0 left-3 z-6" 
+        else return "transition-all w-[200px] absolute top-0 left-0 z-6"
+    }
+
+    function setRootsClass(root:string) {
+        if (root == "short") return "transition-all w-[67px] absolute -top-9 left-16.5"
+        else if (root == "medium") return "transition-all w-[67px] absolute -top-6 left-16.5"
+        else return "transition-all w-[67px] absolute -top-0 left-16.5"
+    }
+
 </script>
 
 <div class="grid mx-10 my-10 lg:mx-75 items-center grid-cols-2 gap-x-10">
@@ -57,12 +77,12 @@
         
             <div class="mb-3">
                 <div class="mb-1 font-semibold">Choix du sol</div>
-                <Toggle selected={soil} params={soils}></Toggle>
+                <Toggle bind:selected={soil} params={soils}></Toggle>
             </div>
         
             <div>
                 <div class="mb-1 font-semibold">Type de racines</div>
-                <Toggle selected={root} params={roots}></Toggle>
+                <Toggle bind:selected={root} params={roots}></Toggle>
             </div>
 
             <Separator class="my-4 bg-gray-950" />
@@ -74,7 +94,7 @@
 
             <div class="mb-3">
                 <div class="mb-2 font-semibold">Type de pot</div>
-                <Toggle params={pots}></Toggle>
+                <Toggle bind:selected={pot} params={pots}></Toggle>
             </div>
             
             <div>
@@ -85,8 +105,15 @@
         </div>
     </div>
 
-    <div class="col-start-2 row-start-1 row-span-2 relative">
-        <img src={Pot} class="w-[200px] absolute top-0 left-0 z-5" alt="pot">
-        <img src={Tree} class="w-[200px] absolute -top-46 left-0" alt="">
+    <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
+        <img src={Pot} class={setPotClass(pot)} alt="">
+        
+        <svg class="absolute -top-37 z-4">
+            <rect stroke="#ACE1AF" fill="#ACE1AF" height="200" width="200"></rect>
+        </svg>
+
+        <img src={Tree} class="w-[200px] absolute -top-46 left-0 z-5" alt="">
+        <img src={Roots} class={setRootsClass(root)} alt="">
+
     </div>
 </div>
