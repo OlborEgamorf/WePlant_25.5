@@ -8,3 +8,4 @@ scikit-learn
 scipy
 fastapi[standard]
 prince
+random

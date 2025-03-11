@@ -3,6 +3,7 @@ import pandas as pd
 from pydantic import BaseModel, Field
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
+import random
 
 app = FastAPI()
 
@@ -36,9 +37,8 @@ def root():
 @app.post("/recommend")
 def get_recommendations(user_prefs: UserPreferences):
     filtered_data = plant_data.copy()
-    failed_criteria = []
-    
-    filters = {
+    failed_criteria = [] 
+    current_filters = {
         "SunNeeds": user_prefs.SunNeeds,
         "WaterNeeds": user_prefs.WaterNeeds,
         "Maintenance": user_prefs.Maintenance,
@@ -47,13 +47,21 @@ def get_recommendations(user_prefs: UserPreferences):
         "plant_categories": user_prefs.plant_categories,
     }
     
-    for key, value in filters.items():
+    for key, value in current_filters.items():
         if value and key in plant_data.columns:
-            if not plant_data[key].str.contains(value, na=False, case=False).any():
-                failed_criteria.append(key)
-            else:
-                filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
+            filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
     
+    while filtered_data.empty and current_filters:
+        key = random.choice(list(current_filters.keys()))
+        value = current_filters[key]
+        failed_criteria.append(f"'{key}' : '{value}' a été supprimé.")
+        del current_filters[key]
+        
+        filtered_data = plant_data.copy()
+        for key, value in current_filters.items():
+            if value and key in plant_data.columns:
+                filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
+
     if user_prefs.min_height_cm is not None:
         filtered_data = filtered_data[filtered_data["min_height_cm"] >= user_prefs.min_height_cm]
     if user_prefs.max_height_cm is not None:
