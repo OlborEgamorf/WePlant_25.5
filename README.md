@@ -11,6 +11,26 @@ Marathon du web M1 MIASHS UMPV 2025.
 - Cassandra Sénécaille
 - Lucas Triozon
 
+## Lancement site web
+
+Nécessite d'avoir NodeJS 20 ou version supérieure pour fonctionner.
+
+Le site est codé avec Svelte, Sveltekit et TypeScript.
+
+Lors de la première utilisation, installer tous les packages avec npm :
+
+```bash
+npm install
+```
+
+Ensuite, lancer le site :
+
+```bash
+npm run dev
+```
+
+Bibliothèque des composants pour importer de nouveaux éléments : https://www.shadcn-svelte.com/
+
 ## Règles de contributions
 
 Ce projet étant court et à 6, il n'y a pas de temps à perdre dans la gestion de Git et de la lisibilité du code. Voici les règles à respecter quand vous écrivez du code et que vous le publiez ici :
