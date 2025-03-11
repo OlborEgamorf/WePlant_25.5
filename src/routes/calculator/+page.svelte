@@ -1,43 +1,38 @@
 <script lang="ts">
-    import Results from "$lib/components/ui/results.svelte";
-    import ResultsAnimation from "$lib/components/ui/resultsAnimation.svelte";
-    import Search from "$lib/components/ui/search.svelte";
-
-    type Selection = {
-        value:string,
-        label:string,
-        disabled:false
-    }
-
-    let light:number[] = $state([50])
-    let moisture:number[] = $state([50])
-    let temperture:number[] = $state([20])
-    let soil:Selection = $state({value:"loam", label:"Terre", disabled:false})
-    
-    let soilValue = $derived(soil.value)
-
+    import * as Tabs from "$lib/components/ui/tabs/index.js";
+    import Cycle from "$lib/components/ui/cycle.svelte";
+    import Life from "$lib/components/ui/life.svelte";
+    import Stress from "$lib/components/ui/stress.svelte";
 </script>
 
 
 <div class="bg-[#ACE1AF] min-h-screen">
-    <div class="bg-[#ACE1AF] h-[100px] flex items-center">
-        <div class="text-center w-full text-3xl">Calculateur</div>
-    </div>
 
-    <div class="grid mx-10 my-5 lg:mx-75 items-center">
-        <div class="col-start-1 row-span-2">
-            <Search bind:light={light} bind:moisture={moisture} bind:temperture={temperture} bind:soil={soil}></Search>
-        </div>
+    <Tabs.Root value="calc" class="py-10">
+        <Tabs.List class="grid mx-100 grid-cols-4">
+          <Tabs.Trigger value="calc">Entretien</Tabs.Trigger>
+          <Tabs.Trigger value="grow">Prédiction de vie</Tabs.Trigger>
+          <Tabs.Trigger value="stress">Stress hydrique</Tabs.Trigger>
+          <Tabs.Trigger value="recom">Recommandation</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="calc">
 
-        <div class="col-start-2 row-start-1">
-            <Results></Results>
-        </div>
+            <Cycle></Cycle>
+          
+        </Tabs.Content>
+        <Tabs.Content value="grow">
 
-        <div class="col-start-2 row-start-2">
-            <ResultsAnimation {light} {moisture} {temperture} soil={soilValue}></ResultsAnimation>
-        </div>
-    </div>
+            <Life></Life>
+          
+        </Tabs.Content>
+        <Tabs.Content value="stress">
 
-    
+            <Stress></Stress>
+          
+        </Tabs.Content>
+        <Tabs.Content value="recom">
+          
+        </Tabs.Content>
+      </Tabs.Root>   
 
 </div>
