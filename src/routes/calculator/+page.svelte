@@ -3,12 +3,13 @@
     import Cycle from "$lib/components/ui/cycle.svelte";
     import Life from "$lib/components/ui/life.svelte";
     import Stress from "$lib/components/ui/stress.svelte";
+    import Recommand from "$lib/components/ui/recommand.svelte";
 </script>
 
 
 <div class="bg-[#ACE1AF] min-h-screen">
 
-    <Tabs.Root value="calc" class="py-10">
+    <Tabs.Root value="calc" class="pt-10">
         <Tabs.List class="grid mx-100 grid-cols-4">
           <Tabs.Trigger value="calc">Entretien</Tabs.Trigger>
           <Tabs.Trigger value="grow">Prédiction de vie</Tabs.Trigger>
@@ -31,7 +32,7 @@
           
         </Tabs.Content>
         <Tabs.Content value="recom">
-          
+          <Recommand></Recommand>
         </Tabs.Content>
       </Tabs.Root>   
 

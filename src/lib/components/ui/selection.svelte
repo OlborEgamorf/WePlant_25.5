@@ -6,12 +6,11 @@
 </script>
 
 <Select.Root portal={null} bind:selected={selected}>
-    <Select.Trigger class="w-[180px] bg-[#ACE1AF] border-2 border-gray-950">
+    <Select.Trigger class="w-[180px] bg-lime-50 border-2 border-gray-950">
         <Select.Value placeholder={placeholder} />
     </Select.Trigger>
     <Select.Content>
         <Select.Group>
-        <Select.Label>Sols</Select.Label>
         {#each params as param}
             <Select.Item value={param.value} label={param.label}
             >{param.label}</Select.Item

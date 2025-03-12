@@ -1,16 +1,17 @@
 <script lang="ts">
+    import Pot from "$lib/assets/pot.svg";
+    import PotClay from "$lib/assets/potClay.svg";
+    import PotClayTop from "$lib/assets/potClayTop.svg";
+    import PotLoam from "$lib/assets/potLoam.svg";
+    import PotLoamTop from "$lib/assets/potLoamTop.svg";
+    import PotSand from "$lib/assets/potSand.svg";
+    import PotSandTop from "$lib/assets/potSandTop.svg";
+    import Roots from "$lib/assets/roots.svg";
+    import Tree from "$lib/assets/tree.svg";
+    
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
     import Toggle from "./toggle.svelte";
-    import Pot from "$lib/assets/pot.svg"
-    import Tree from "$lib/assets/tree.svg"
-    import Roots from "$lib/assets/roots.svg"
-    import PotLoam from "$lib/assets/potLoam.svg"
-    import PotClay from "$lib/assets/potClay.svg"
-    import PotSand from "$lib/assets/potSand.svg"
-    import PotLoamTop from "$lib/assets/potLoamTop.svg"
-    import PotClayTop from "$lib/assets/potClayTop.svg"
-    import PotSandTop from "$lib/assets/potSandTop.svg"
 
     let soils:Selects[] = [
         {value:"loam", label:"Terre"},
