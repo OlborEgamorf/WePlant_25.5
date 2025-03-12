@@ -8,6 +8,9 @@
     import PotSandTop from "$lib/assets/potSandTop.svg";
     import Roots from "$lib/assets/roots.svg";
     import Tree from "$lib/assets/tree.svg";
+    import ClayIcon from "$lib/assets/argile.svg";
+    import SandIcon from "$lib/assets/sable.svg";
+    import LoamIcon from "$lib/assets/terre.svg";
     
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
@@ -99,7 +102,7 @@
         
             <div class="mb-3">
                 <div class="mb-1 font-semibold">Choix du sol</div>
-                <Toggle bind:selected={soil} params={soils}></Toggle>
+                <Toggle bind:selected={soil} params={soils} image={[LoamIcon,ClayIcon,SandIcon]}></Toggle>
             </div>
         
             <div>

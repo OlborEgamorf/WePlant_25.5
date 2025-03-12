@@ -15,3 +15,14 @@ type APIRecommandation = {
     failed_criteria:string[],
     hasFailed:boolean
 }
+
+type APIStress = {
+    prediction:number,
+    prob0:number,
+    prob1:number,
+    prob2:number
+}
+
+type APIPredict = {
+    prediction:number
+}

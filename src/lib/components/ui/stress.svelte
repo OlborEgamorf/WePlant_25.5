@@ -54,10 +54,6 @@
         .then(data => dataAPI = data);
     })
 
-    $effect(() => {
-        console.log(dataAPI)
-    })
-
 </script>
 
 <div class="grid mx-10 my-10 lg:mx-75 items-center grid-cols-2 gap-x-10">
@@ -104,5 +100,9 @@
 
     <div class="col-start-2 row-start-1 row-span-2">
         <Results></Results>
+    </div>
+
+    <div class="col-start-1 col-span-2 row-start-2 mt-10">
+        <Separator class="mb-4"></Separator>
     </div>
 </div>

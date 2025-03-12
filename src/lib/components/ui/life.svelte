@@ -3,13 +3,18 @@
     import Results from "$lib/components/ui/results.svelte";
     import Toggle from "./toggle.svelte";
 
+    import ClayIcon from "$lib/assets/argile.svg";
+    import SandIcon from "$lib/assets/sable.svg";
+    import LoamIcon from "$lib/assets/terre.svg";
+
     let soils:Selects[] = [
         {value:"loam", label:"Terre"},
         {value:"clay", label:"Argile"},
         {value:"sand", label:"Sable"},
     ]
 
-    let soil:string = "loam"
+    let soil:string = $state("loam")
+    let waterNeed:string = $state("0")
 
     let water:Selects[] = [
         {value:"0", label:"Quotidien"},
@@ -52,8 +57,8 @@
     let dataAPI = $state({})
 
     $effect(() => {
-        moisture;temperature;sun;soil;water
-        fetch(`http://127.0.0.1:8000/predict_croissance?sunlight_hours=&temperature=&moisture=&soil=&water_freq=`)
+        moisture;temperature;sun;soil;waterNeed
+        fetch(`http://127.0.0.1:8000/predict_croissance?sunlight_hours=${sun}&temperature=${temperature}&moisture=${moisture}&soil=${soil}&water_freq=${waterNeed}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
     })
@@ -70,7 +75,7 @@
         
             <div class="mb-3">
                 <div class="mb-1 font-semibold">Choix du sol</div>
-                <Toggle selected={soil} params={soils}></Toggle>
+                <Toggle bind:selected={soil} params={soils} image={[LoamIcon,ClayIcon,SandIcon]}></Toggle>
                 <!-- <Selection params={soils} placeholder={"Choisir un sol"}></Selection> -->
             </div> 
             
@@ -96,7 +101,7 @@
 
             <div>
                 <div class="mb-2 font-semibold">Fréquence d'arosage</div>
-                <Toggle params={water}></Toggle>
+                <Toggle bind:selected={waterNeed} params={water}></Toggle>
             </div>
 
             

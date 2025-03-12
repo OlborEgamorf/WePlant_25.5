@@ -101,10 +101,6 @@
         recomID = this.id
     }
 
-    $effect(() => {
-        console.log(dataAPI)
-    })
-
 </script>
 
 <div class="grid mx-10 my-10 lg:mx-75  grid-cols-2 gap-x-10">

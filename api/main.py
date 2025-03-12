@@ -18,6 +18,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
 # Définition des données sous forme de DataFrame
 data = {
     "Sol": ["Sableux", "Limoneux", "Argileux"],
@@ -159,18 +161,13 @@ class SoilType(str, Enum):
     sand = "sand"
     clay = "clay"
 
-class WaterFrequency(str, Enum):
-    quotidien = "0"
-    semi_hebdomadaire = "1"
-    hebdomadaire = "2"
-
 # Classe pour valider les données d'entrée
 class PlantData(BaseModel):
     Sunlight_Hours: float # Intervalle possible : 0 - 12
     Temperature: float # Intervalle possible : 0 - 50
     Humidity: float # Intervalle possible : 0 - 100
     Soil_Type: str  # les valeurs possibles sont "loam", "sand", "clay"
-    Water_Frequency: str  # les valeurs possibles sont 0 (quotidien), 1 (semi-hebdomadaire), 2 (hebdomadaire)
+    Water_Frequency: int  # les valeurs possibles sont 0 (quotidien), 1 (semi-hebdomadaire), 2 (hebdomadaire)
 
 # Fonction pour transformer les données d'entrée en format adapté au modèle
 def transform_input(data):
@@ -179,7 +176,7 @@ def transform_input(data):
     soil = soil_type.get(data.Soil_Type, [0, 0, 0])  # Si l'entrée n'est pas valide, on renvoie [0, 0, 0]
 
     # Transformation de Water_Frequency en colonnes binaires
-    water_freq = {'0': [0, 1, 0], '1': [1, 0, 0], '2': [0, 0, 1]}
+    water_freq = {0: [0, 1, 0], 1: [1, 0, 0], 3: [0, 0, 1]}
     water = water_freq.get(data.Water_Frequency, [0, 0, 0])  # Si l'entrée n'est pas valide, on renvoie [0, 0, 0]
 
     # Créer le tableau d'entrées final avec les valeurs
@@ -200,11 +197,11 @@ def transform_input(data):
 # Route pour faire une prédiction
 @app.get("/predict_croissance")
 async def predict(
-    sunlight_hours: float = Query(..., alias= "Heures d'ensoleillement"),  # entre 0 et 12 heures
-    temperature: float = Query(..., alias="Température"),  # entre 0 et 50°C
-    moisture: float = Query(..., alias="Humidité"),  # entre 0 et 100%
-    soil: SoilType = Query(..., alias="Type de sol"),
-    water_freq: WaterFrequency = Query(..., alias="fréquence d'arrosage")
+    sunlight_hours: float = Query(..., description= "Heures d'ensoleillement"),  # entre 0 et 12 heures
+    temperature: float = Query(..., description="Température"),  # entre 0 et 50°C
+    moisture: float = Query(..., description="Humidité"),  # entre 0 et 100%
+    soil: str = Query(..., description="Type de sol"),
+    water_freq: int = Query(..., description="fréquence d'arrosage")
 ):
         
     # Transformer les données d'entrée
@@ -232,10 +229,6 @@ async def predict(
 
 csv_file = "./data/A_to_Z_Flowers_indicateurs.csv"  
 plant_data = pd.read_csv(csv_file)
-
-@app.get("/")
-def root():
-    return {"message": "Bienvenue sur l'API de recommandation de plantes"}
 
 @app.get("/recommend")
 def get_recommendations(
