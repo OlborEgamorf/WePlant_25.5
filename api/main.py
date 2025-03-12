@@ -148,7 +148,7 @@ def predict_health_status(
 # API Croissance Plante
 
 # Charger le modèle RandomForest enregistré
-model_pred_croissance = joblib.load('../data/random_forest_model_plant_growth.pkl')
+model_pred_croissance = joblib.load('data/random_forest_model_plant_growth.pkl')
 
 
 # Classe pour valider les données d'entrée
