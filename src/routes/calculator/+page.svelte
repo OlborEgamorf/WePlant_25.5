@@ -9,7 +9,7 @@
 
 <div class="bg-[#ACE1AF] min-h-screen">
 
-    <Tabs.Root value="calc" class="pt-10">
+    <Tabs.Root value="calc" class="pt-10 z-7">
         <Tabs.List class="grid mx-100 grid-cols-4">
           <Tabs.Trigger value="calc">Entretien</Tabs.Trigger>
           <Tabs.Trigger value="grow">Prédiction de croissance</Tabs.Trigger>

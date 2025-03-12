@@ -49,7 +49,7 @@
         moistureTemp;
         let i = ++incr
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-        sleep(1000).then(() => {
+        sleep(700).then(() => {
             if (i == incr) {
                 moisture = moistureTemp
                 incr = 0

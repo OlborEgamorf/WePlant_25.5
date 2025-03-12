@@ -3,6 +3,8 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
 
+    import LoaderCircle from "lucide-svelte/icons/loader-circle";
+
     import Banzai from "$lib/assets/banzai.svg"
     import Eclair from "$lib/assets/eclair.svg"
     import Eclair2 from "$lib/assets/thunder.svg"
@@ -33,10 +35,12 @@
     let potassisumTemp:number[] = $state([30]) 
 
     let incr:number = 0
+    let change:boolean= $state(false)
 
     $effect(() => {
         moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
         let i = ++incr
+        change = true
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
         sleep(700).then(() => {
             if (i == incr) {
@@ -46,6 +50,7 @@
                 nitro = nitroTemp
                 potassisum = potassisumTemp
                 incr = 0
+                change = false
             }
         })
     })
@@ -111,10 +116,15 @@
     </div>
 
     <div class="col-start-2 row-start-1 row-span-2">
+        
         <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
 
-
-    
+            {#if change}
+                <div class="col-start-2 row-start-1 row-span-2 absolute flex -top-60 left-60 items-center">
+                    <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+                    Chut chut ça pousse !</div>
+            {/if}
+            
             <img src={Banzai} class="w-[300px] absolute -top-40 left-15 z-5" alt="">
 
             <img src={Eclair2} class="w-[40px] absolute -top-25 left-20 z-5 transition-all {health >= 1 ? 'animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-out' : 'opacity-0'}" alt="">
