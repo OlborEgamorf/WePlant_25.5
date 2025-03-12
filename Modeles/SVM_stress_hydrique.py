@@ -19,9 +19,10 @@ target = "Plant_Health_Status"
 X = data[features]
 y = data[target]
 
-# Encoder la variable cible
+# Encoder la variable cible avec un ordre spécifique
 label_encoder = LabelEncoder()
-y_encoded = label_encoder.fit_transform(y)
+label_encoder.classes_ = np.array(["Healthy", "Moderate Stress", "High Stress"])  # Ordre souhaité
+y_encoded = label_encoder.transform(y)
 
 # Récupérer les noms des classes
 class_labels = label_encoder.classes_
@@ -48,12 +49,11 @@ joblib.dump(best_model, "data/svm_plant_health.pkl")
 joblib.dump(scaler, "data/scaler.pkl")
 
 # Prédictions
-# Prédictions (avec inversion des labels pour obtenir les classes qualitatives)
 y_pred = best_model.predict(X_test)
-y_pred_classes = label_encoder.inverse_transform(y_pred)  # Inverser les labels prédits
+y_pred_classes = label_encoder.inverse_transform(y_pred)
 
 y_prob = best_model.predict_proba(X_test)
-y_prob_classes = label_encoder.inverse_transform(np.argmax(y_prob, axis=1))  # Inverser les classes avec la probabilité la plus élevée
+y_prob_classes = label_encoder.inverse_transform(np.argmax(y_prob, axis=1))
 
 # Évaluation du modèle
 print("Best Parameters:", grid_search.best_params_)
@@ -64,14 +64,14 @@ auc_score = roc_auc_score(y_test, y_prob, multi_class='ovr')
 print("AUC Score:", auc_score)
 
 # Calcul de l'AIC et du BIC
-n = X_test.shape[0]  # Nombre d'échantillons
-k = X_test.shape[1]  # Nombre de variables explicatives
+n = X_test.shape[0]
+k = X_test.shape[1]
 log_likelihood = -np.sum(np.log(y_prob[np.arange(len(y_test)), y_test] + 1e-9))
 AIC = 2 * k - 2 * log_likelihood
 BIC = k * np.log(n) - 2 * log_likelihood
 print(f"AIC: {AIC}, BIC: {BIC}")
 
-# Visualisation des résultats avec les classes qualitatives
+# Visualisation des résultats
 plt.figure(figsize=(10, 6))
 sns.heatmap(pd.crosstab(pd.Series(label_encoder.inverse_transform(y_test), name='Actual'), 
                         pd.Series(y_pred_classes, name='Predicted')), 
@@ -79,7 +79,7 @@ sns.heatmap(pd.crosstab(pd.Series(label_encoder.inverse_transform(y_test), name=
 plt.title("Matrice de Confusion")
 plt.show()
 
-# Tracer les courbes ROC pour chaque classe
+# Tracer les courbes ROC
 plt.figure(figsize=(10, 6))
 for i, class_name in enumerate(class_labels):
     fpr, tpr, _ = roc_curve(y_test == i, y_prob[:, i])
@@ -90,4 +90,3 @@ plt.ylabel('Taux de vrais positifs')
 plt.title('Courbes ROC')
 plt.legend()
 plt.show()
-
