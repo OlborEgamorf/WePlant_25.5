@@ -8,3 +8,10 @@ type Selected = {
     label:string,
     disabled:false
 }
+
+type APIRecommandation = {
+    recommendations:string[],
+    success:boolean,
+    failed_criteria:string[],
+    hasFailed:boolean
+}

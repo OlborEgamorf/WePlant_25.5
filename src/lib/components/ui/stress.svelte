@@ -3,29 +3,29 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
 
-    let minMoisture:number = 0
-    let minTemperture:number = 0 
+    let minMoisture:number = 10
+    let minTemperture:number = 15
     let minPhosphore:number = 0
     let minNitro:number = 0
     let minPotassium:number = 0
 
-    let maxMoisture:number = 100
-    let maxTemperture:number = 35
+    let maxMoisture:number = 40
+    let maxTemperture:number = 25
     let maxPhosphore:number = 100
     let maxNitro:number = 100
     let maxPotassium:number = 100
 
-    let moisture:number[] = $state([50])
+    let moisture:number[] = $state([20])
     let temperature:number[] = $state([15])
     let phosphore:number[] = $state([50])
     let nitro:number[] = $state([50])
     let potassisum:number[] = $state([50]) 
 
-    let moistureTemp:number[] = $state([50])
+    let moistureTemp:number[] = $state([20])
     let temperatureTemp:number[] = $state([15])
-    let phosphoreTemp:number[] = $state([50])
-    let nitroTemp:number[] = $state([50])
-    let potassisumTemp:number[] = $state([50]) 
+    let phosphoreTemp:number[] = $state([30])
+    let nitroTemp:number[] = $state([30])
+    let potassisumTemp:number[] = $state([30]) 
 
     let incr:number = 0
 
@@ -33,7 +33,7 @@
         moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
         let i = ++incr
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-        sleep(1000).then(() => {
+        sleep(700).then(() => {
             if (i == incr) {
                 moisture = moistureTemp
                 temperature = temperatureTemp
@@ -48,10 +48,14 @@
     let dataAPI = $state({})
 
     $effect(() => {
-        moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
-        fetch('http://127.0.0.1:8000/cycle?')
+        moisture;temperature;phosphore;nitro;potassisum;
+        fetch(`http://127.0.0.1:8000/stress_hydrique?soil_moisture=${moisture}&soil_temperature=${temperature}&nitrogen_level=${nitro}&phosphorus_level=${phosphore}&potassium_level=${potassisum}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
+    })
+
+    $effect(() => {
+        console.log(dataAPI)
     })
 
 </script>
@@ -83,17 +87,17 @@
 
             <div class="mb-3">
                 <div class="mb-2 font-semibold">Taux de phosphore - {phosphoreTemp} %</div>
-                <Slider min={minPhosphore} max={maxPhosphore} step={1} class="w-[180px]" />
+                <Slider bind:value={phosphoreTemp} min={minPhosphore} max={maxPhosphore} step={1} class="w-[180px]" />
             </div>
 
             <div class="mb-3">
                 <div class="mb-2 font-semibold">Taux de nitrogène - {nitroTemp} %</div>
-                <Slider min={minNitro} max={maxNitro} step={1} class="w-[180px]" />
+                <Slider bind:value={nitroTemp} min={minNitro} max={maxNitro} step={1} class="w-[180px]" />
             </div>
 
             <div>
                 <div class="mb-2 font-semibold">Taux de potassium - {potassisumTemp} %</div>
-                <Slider min={minPotassium} max={maxPotassium} step={1} class="w-[180px]" />
+                <Slider bind:value={potassisumTemp} min={minPotassium} max={maxPotassium} step={1} class="w-[180px]" />
             </div>
         </div>
     </div>

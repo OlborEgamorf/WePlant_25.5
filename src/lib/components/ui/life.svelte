@@ -12,9 +12,9 @@
     let soil:string = "loam"
 
     let water:Selects[] = [
-        {value:"1", label:"Rare"},
-        {value:"2", label:"Moyen"},
-        {value:"3", label:"Fréquent"}
+        {value:"0", label:"Quotidien"},
+        {value:"1", label:"Semi-hebdomadaire"},
+        {value:"2", label:"Hebdomadaire"}
     ]
 
     let minMoisture:number = 0
@@ -53,7 +53,7 @@
 
     $effect(() => {
         moisture;temperature;sun;soil;water
-        fetch('http://127.0.0.1:8000/life?')
+        fetch(`http://127.0.0.1:8000/predict_croissance?sunlight_hours=&temperature=&moisture=&soil=&water_freq=`)
         .then(response => response.json())
         .then(data => dataAPI = data);
     })

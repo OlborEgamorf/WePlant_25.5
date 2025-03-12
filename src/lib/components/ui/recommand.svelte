@@ -25,7 +25,7 @@
     import grimpantes from "$lib/assets/climbing.svg";
     import herbes from "$lib/assets/herb.svg";
     import roses from "$lib/assets/rose.svg";
-    import arbustes from "$lib/assets/tree.svg";
+    import arbustes from "$lib/assets/treeRec.svg";
     import vivaces from "$lib/assets/vivaces.svg";
 
     
@@ -39,6 +39,9 @@
     let Maintenance:string = $state("Moyen")    
     let saison:Selected = $state({value:"Printemps", label:"Printemps",disabled:false})
     let categorie:Selected = $state({value:"Vivaces", label:"Vivaces",disabled:false})
+
+    let minHeight:number = $state(20)
+    let maxHeight:number = $state(60)
 
     let soils:Selects[] = [
         {value:"Limon", label:"Terre"},
@@ -81,8 +84,26 @@
         {value:"Herbes", label:"Herbes"},
         {value:"Roses", label:"Roses"},
     ]
+    
+    let dataAPI:APIRecommandation = $state({recommendations:[], success:true, hasFailed:false, failed_criteria:[]})
 
+    $effect(() => {
+        soil;WaterNeed;SunNeed;Maintenance;saison;categorie;minHeight;maxHeight
+        fetch(`http://127.0.0.1:8000/recommend?sun_needs=${SunNeed}&water_needs=${WaterNeed}&maintenance=${Maintenance}&soil=${soil}&season=${saison}&plant_category=${categorie}&min_height=${minHeight}&max_height=${maxHeight}`)
+        .then(response => response.json())
+        .then(data => dataAPI = data);
+        
+    })
 
+    let recomID:string = $state("0")
+
+    function onclickRecom(this : HTMLElement) {
+        recomID = this.id
+    }
+
+    $effect(() => {
+        console.log(dataAPI)
+    })
 
 </script>
 
@@ -131,8 +152,8 @@
             <div class = "mb-3">
                 <div class="mb-1 font-semibold">Taille (cm)</div>
                 <div class = "flex">
-                    <Input type="number" min="0" max="1000" step="1" value="20" class="w-[100px]"></Input>
-                    <Input type="number" min="0" max="1000" step="1" value="60" class="w-[100px]"></Input>
+                    <Input type="number" min="0" max="1000" step="1" bind:value={minHeight} class="w-[100px]"></Input>
+                    <Input type="number" min="0" max="1000" step="1" bind:value={maxHeight} class="w-[100px]"></Input>
                 </div>
             </div>  
         </div>
@@ -141,17 +162,19 @@
     <div class="col-start-2 flex flex-col items-start">
         <div class="w-full mx-10">
             <div class="grid grid-cols-5 gap-x-4 gap-y-10">
-                <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md"></div>
-                <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md"></div>
-                <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md"></div>
-                <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md"></div>
-                <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md"></div>
-    
+                {#each dataAPI.recommendations as plant, i}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
+                    <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md" id={i.toString()} onclick={onclickRecom}>{plant}</div>
+                {/each}    
+                
                 <div class="col-span-3 w-full h-60 bg-red-500 rounded-md"></div>
-    
-                <div class="col-span-2 text-lg text-black">
-                    <p>Ceci est du texte dans les deux dernières colonnes</p>
-                </div>
+
+                {#each dataAPI.recommendations as plant, i}
+                    <div class="col-span-2 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
+                        <p>{plant}</p>
+                    </div>
+                {/each}
             </div>
         </div>
     </div>

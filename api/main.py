@@ -1,10 +1,12 @@
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+import random
 import joblib
 import numpy as np
 from enum import Enum
+from typing import Optional
 
 app = FastAPI()
 
@@ -55,7 +57,7 @@ df = pd.DataFrame(data)
 async def root():
     return {"message": "Bienvenue sur l'API des paramètres des sols"}
 
-@app.get("/parametres_sol/")
+@app.get("/parametres_sol")
 async def get_sol_parameters(
     sol: str = Query(..., description="Type de sol: Sableux, Limoneux, Argileux"),
     racine: str = Query(..., description="Type de racine: Profonds, Moyens, Superficiels"),
@@ -149,35 +151,35 @@ def predict_health_status(
 # API Croissance Plante
 
 # Charger le modèle RandomForest enregistré
-model_pred_croissance = joblib.load('data/random_forest_model_plant_growth.pkl')
+model_pred_vie = joblib.load('./data/random_forest_model_plant_growth.pkl')
 
 # Définir les valeurs possibles pour Soil_Type et Water_Frequency avec Enum
 class SoilType(str, Enum):
-    limon = "limon"
-    sable = "sable"
-    argile = "argile"
+    loam = "loam"
+    sand = "sand"
+    clay = "clay"
 
 class WaterFrequency(str, Enum):
-    quotidien = "quotidien"
-    semi_hebdomadaire = "semi-hebdomadaire"
-    hebdomadaire = "hebdomadaire"
+    quotidien = "0"
+    semi_hebdomadaire = "1"
+    hebdomadaire = "2"
 
 # Classe pour valider les données d'entrée
 class PlantData(BaseModel):
     Sunlight_Hours: float # Intervalle possible : 0 - 12
     Temperature: float # Intervalle possible : 0 - 50
     Humidity: float # Intervalle possible : 0 - 100
-    Soil_Type: str  # les valeurs possibles sont "limon", "sable", "argile"
-    Water_Frequency: str  # les valeurs possibles sont "quotidien", "semi-hebdomadaire", "hebdomadaire"
+    Soil_Type: str  # les valeurs possibles sont "loam", "sand", "clay"
+    Water_Frequency: str  # les valeurs possibles sont 0 (quotidien), 1 (semi-hebdomadaire), 2 (hebdomadaire)
 
 # Fonction pour transformer les données d'entrée en format adapté au modèle
 def transform_input(data):
     # Transformation des Soil_Type en colonnes binaires
-    soil_type = {'limon': [0, 1, 0], 'sable': [0, 0, 1], 'argile': [1, 0, 0]}
+    soil_type = {'loam': [0, 1, 0], 'sand': [0, 0, 1], 'clay': [1, 0, 0]}
     soil = soil_type.get(data.Soil_Type, [0, 0, 0])  # Si l'entrée n'est pas valide, on renvoie [0, 0, 0]
 
     # Transformation de Water_Frequency en colonnes binaires
-    water_freq = {'quotidien': [0, 1, 0], 'semi-hebdomadaire': [1, 0, 0], 'hebdomadaire': [0, 0, 1]}
+    water_freq = {'0': [0, 1, 0], '1': [1, 0, 0], '2': [0, 0, 1]}
     water = water_freq.get(data.Water_Frequency, [0, 0, 0])  # Si l'entrée n'est pas valide, on renvoie [0, 0, 0]
 
     # Créer le tableau d'entrées final avec les valeurs
@@ -196,25 +198,26 @@ def transform_input(data):
     return input_data
 
 # Route pour faire une prédiction
-@app.post("/predict_croissance/")
+@app.get("/predict_croissance")
 async def predict(
-    Sunlight_Hours: float = Query(..., alias= "Heures d'ensoleillement"),  # entre 0 et 12 heures
-    Temperature: float = Query(..., alias="Température"),  # entre 0 et 50°C
-    Humidity: float = Query(..., alias="Humidité"),  # entre 0 et 100%
-    Soil_Type: SoilType = Query(..., alias="Type de sol"),
-    Water_Frequency: WaterFrequency = Query(..., alias="fréquence d'arrosage")
+    sunlight_hours: float = Query(..., alias= "Heures d'ensoleillement"),  # entre 0 et 12 heures
+    temperature: float = Query(..., alias="Température"),  # entre 0 et 50°C
+    moisture: float = Query(..., alias="Humidité"),  # entre 0 et 100%
+    soil: SoilType = Query(..., alias="Type de sol"),
+    water_freq: WaterFrequency = Query(..., alias="fréquence d'arrosage")
 ):
+        
     # Transformer les données d'entrée
     input_data = transform_input(PlantData(
-        Sunlight_Hours=Sunlight_Hours,
-        Temperature=Temperature,
-        Humidity=Humidity,
-        Soil_Type=Soil_Type,
-        Water_Frequency=Water_Frequency
+        Sunlight_Hours=sunlight_hours,
+        Temperature=temperature,
+        Humidity=moisture,
+        Soil_Type=soil,
+        Water_Frequency=water_freq
     ))
     
     # Faire une prédiction avec le modèle
-    prediction = model_pred_croissance.predict(input_data)
+    prediction = model_pred_vie.predict(input_data)
     
     # Si la prédiction = 1, la plante à une bonne croissance: 
     #   "🌱✨ La plante se développe sainement ! Les conditions environnementales et les soins apportés sont favorables à une croissance optimale"
@@ -223,4 +226,62 @@ async def predict(
     #   "😕 La croissance de la plante est insuffisante. Les conditions actuelles pourraient être optimisées en ajustant l’arrosage, l’exposition à la lumière ou le niveau d'humidité. "
 
     # Retourner la prédiction
-    return {int(prediction[0])}
+    return {"prediction":int(prediction[0])}
+
+
+
+csv_file = "./data/A_to_Z_Flowers_indicateurs.csv"  
+plant_data = pd.read_csv(csv_file)
+
+@app.get("/")
+def root():
+    return {"message": "Bienvenue sur l'API de recommandation de plantes"}
+
+@app.get("/recommend")
+def get_recommendations(
+    sun_needs:Optional[str] = Query(None, description="Besoins en soleil"),
+    water_needs: Optional[str] = Query(None, description="Besoins en eau"),
+    maintenance: Optional[str] = Query(None, description="Niveau de maintenance"),
+    soil: Optional[str] = Query(None, description="Type de sol"),
+    season: Optional[str] = Query(None, description="Saison de croissance"),
+    plant_category: Optional[str] = Query(None, description="Catégories de plantes"),
+    min_height: Optional[float] = Query(None, description="Hauteur minimale en cm"),
+    max_height: Optional[float] = Query(None, description="Hauteur maximale en cm")):
+    filtered_data = plant_data.copy()
+    failed_criteria = [] 
+    current_filters = {
+        "SunNeeds": sun_needs,
+        "WaterNeeds": water_needs,
+        "Maintenance": maintenance,
+        "Type de Sol": soil,
+        "saison": season,
+        "plant_categories": plant_category,
+    }
+    
+    for key, value in current_filters.items():
+        if value and key in plant_data.columns and value != "undefined":
+            filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
+    
+    while filtered_data.empty and current_filters:
+        key = random.choice(list(current_filters.keys()))
+        value = current_filters[key]
+        failed_criteria.append(key)
+        del current_filters[key]
+        
+        filtered_data = plant_data.copy()
+        for key, value in current_filters.items():
+            if value and key in plant_data.columns:
+                filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
+
+    if min_height is not None:
+        filtered_data = filtered_data[filtered_data["min_height_cm"] >= min_height]
+    if max_height is not None:
+        filtered_data = filtered_data[filtered_data["max_height_cm"] <= max_height]
+    
+    success = True
+    recommendations = filtered_data["Name"].head(5).tolist()
+    if not recommendations:
+        recommendations = plant_data["Name"].head(5).tolist()
+        success = False
+    
+    return {"recommendations": recommendations, "success":success, "failed_criteria": failed_criteria, "hasFailed":len(failed_criteria) != 0} 
