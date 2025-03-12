@@ -8,3 +8,6 @@ scikit-learn
 scipy
 fastapi[standard]
 prince
+pydantic
+joblib
+FATS
