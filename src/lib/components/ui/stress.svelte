@@ -3,6 +3,8 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
 
+    import Banzai from "$lib/assets/banzai.svg"
+
     let minMoisture:number = 10
     let minTemperture:number = 15
     let minPhosphore:number = 0
@@ -99,7 +101,14 @@
     </div>
 
     <div class="col-start-2 row-start-1 row-span-2">
-        <Results></Results>
+        <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
+
+
+    
+            <img src={Banzai} class="w-[300px] absolute top-0 left-0 z-5" alt="">
+
+    
+        </div>
     </div>
 
     <div class="col-start-1 col-span-2 row-start-2 mt-10">
