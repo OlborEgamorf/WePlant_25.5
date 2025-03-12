@@ -1,6 +1,8 @@
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import numpy as np
+import joblib
 
 app = FastAPI()
 
@@ -107,3 +109,32 @@ async def get_sol_parameters(
         "humidite_mm": humidity,
         "besoin_arrosage": besoin_arrosage
     }
+
+def load_stress():
+    model_stress = joblib.load("data/svm_plant_health.pkl")
+    scaler_stress = joblib.load("data/scaler.pkl")
+    return model_stress, scaler_stress
+
+model_stress, scaler_stress = load_stress()
+
+@app.get("/stress_hydrique")
+def predict_health_status(
+    soil_moisture: float = Query(..., description="Taux d'humidité du sol"),
+    soil_temperature: float = Query(..., description="Température du sol"),
+    nitrogen_level: float = Query(default=30.14, description="Niveau d'azote dans le sol"),
+    phosphorus_level: float = Query(default=30.02, description="Niveau de phosphore dans le sol"),
+    potassium_level: float = Query(default=30.49, description="Niveau de potassium dans le sol")
+):
+    try:
+        # Transformer les données d'entrée
+        input_data = np.array([[soil_moisture, soil_temperature, nitrogen_level, phosphorus_level, potassium_level]])
+        input_data_scaled = scaler_stress.transform(input_data)
+        
+        # Prédire la classe et les probabilités
+        prediction = model_stress.predict(input_data_scaled)
+        prediction_proba = model_stress.predict_proba(input_data_scaled).tolist()[0]
+        
+        return {"prediction": int(prediction[0]), "prob0": prediction_proba[0],  "prob1": prediction_proba[1], "prob2": prediction_proba[2]}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
