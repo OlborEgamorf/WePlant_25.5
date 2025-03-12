@@ -116,7 +116,7 @@ async def get_sol_parameters(
 # API Croissance Plante
 
 # Charger le modèle RandomForest enregistré
-model_pred_vie = joblib.load('../data/random_forest_model_plant_growth.pkl')
+model_pred_croissance = joblib.load('../data/random_forest_model_plant_growth.pkl')
 
 
 # Classe pour valider les données d'entrée
@@ -166,7 +166,7 @@ async def predict(user_prefs: PlantData):
     input_data = transform_input(user_prefs)
 
     # Faire une prédiction avec le modèle
-    prediction = model_pred_vie.predict(input_data)
+    prediction = model_pred_croissance.predict(input_data)
     
     # Si la prédiction = 1, la plante à une bonne croissance: 
     #   "🌱✨ La plante se développe sainement ! Les conditions environnementales et les soins apportés sont favorables à une croissance optimale"
