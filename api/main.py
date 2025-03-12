@@ -165,8 +165,8 @@ class WaterFrequency(str, Enum):
 # Classe pour valider les données d'entrée
 class PlantData(BaseModel):
     Sunlight_Hours: float # Intervalle possible : 0 - 12
-    Temperature: float # Intervalle possible : 10 - 40
-    Humidity: float # Intervalle possible : 30 - 90
+    Temperature: float # Intervalle possible : 0 - 50
+    Humidity: float # Intervalle possible : 0 - 100
     Soil_Type: str  # les valeurs possibles sont "limon", "sable", "argile"
     Water_Frequency: str  # les valeurs possibles sont "quotidien", "semi-hebdomadaire", "hebdomadaire"
 
