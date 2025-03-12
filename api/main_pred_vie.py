@@ -8,7 +8,7 @@ import numpy as np
 #logging.basicConfig(level=logging.INFO)
 
 # Charger le modèle RandomForest enregistré
-model = joblib.load('../data/random_forest_model_plant_growth.pkl')
+model_pred_vie = joblib.load('../data/random_forest_model_plant_growth.pkl')
 
 # Initialiser l'application FastAPI
 app = FastAPI()
@@ -23,11 +23,11 @@ app.add_middleware(
 
 # Classe pour valider les données d'entrée
 class PlantData(BaseModel):
-    Sunlight_Hours: float
-    Temperature: float
-    Humidity: float
-    Soil_Type: str  # les valeurs possibles sont "loam", "sandy", "clay"
-    Water_Frequency: str  # les valeurs possibles sont "daily", "bi-weekly", "weekly"
+    Sunlight_Hours: float # Intervalle possible : 0 - 12
+    Temperature: float # Intervalle possible : 10 - 40
+    Humidity: float # Intervalle possible : 30 - 90
+    Soil_Type: str  # les valeurs possibles sont "limon", "sable", "argile"
+    Water_Frequency: str  # les valeurs possibles sont "quotidien", "semi-hebdomadaire", "hebdomadaire"
 
 # Fonction pour transformer les données d'entrée en format adapté au modèle
 def transform_input(data):
@@ -69,21 +69,18 @@ async def predict(user_prefs: PlantData):
     
     if user_prefs.Water_Frequency.lower() not in ["quotidien", "semi-hebdomadaire", "hebdomadaire"]:
         raise HTTPException(status_code=400, detail="La fréquence d'arrosage doit être 'quotidien', 'semi-hebdomadaire' ou 'hebdomadaire'.")
-    
-    #logging.info(f"Données reçues : {user_prefs}")
-    
+        
     # Transformer les données d'entrée
     input_data = transform_input(user_prefs)
-    #logging.info(f"Données transformées : {input_data}")
 
     # Faire une prédiction avec le modèle
-    prediction = model.predict(input_data)
-    #logging.info(f"Prédiction faite : {prediction[0]}")
+    prediction = model_pred_vie.predict(input_data)
     
-    if int(prediction[0]) == 1:
-        message = "🌱✨ La plante se développe sainement ! Les conditions environnementales et les soins apportés sont favorables à une croissance optimale"
-    else:
-        message = "😕 La croissance de la plante est insuffisante. Les conditions actuelles pourraient être optimisées en ajustant l’arrosage, l’exposition à la lumière ou le niveau d'humidité. "
+    # Si la prédiction = 1, la plante à une bonne croissance: 
+    #   "🌱✨ La plante se développe sainement ! Les conditions environnementales et les soins apportés sont favorables à une croissance optimale"
+    
+    # Si la prédiction = 0, la plante à une mauvaise croissance:
+    #   "😕 La croissance de la plante est insuffisante. Les conditions actuelles pourraient être optimisées en ajustant l’arrosage, l’exposition à la lumière ou le niveau d'humidité. "
 
     # Retourner la prédiction
-    return {message}
+    return {int(prediction[0])}
