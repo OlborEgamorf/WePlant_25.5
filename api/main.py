@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import numpy as np
+from enum import Enum
 
 app = FastAPI()
 
@@ -150,6 +151,16 @@ def predict_health_status(
 # Charger le modèle RandomForest enregistré
 model_pred_croissance = joblib.load('data/random_forest_model_plant_growth.pkl')
 
+# Définir les valeurs possibles pour Soil_Type et Water_Frequency avec Enum
+class SoilType(str, Enum):
+    limon = "limon"
+    sable = "sable"
+    argile = "argile"
+
+class WaterFrequency(str, Enum):
+    quotidien = "quotidien"
+    semi_hebdomadaire = "semi-hebdomadaire"
+    hebdomadaire = "hebdomadaire"
 
 # Classe pour valider les données d'entrée
 class PlantData(BaseModel):
@@ -186,17 +197,22 @@ def transform_input(data):
 
 # Route pour faire une prédiction
 @app.post("/predict_croissance/")
-async def predict(user_prefs: PlantData):
-    # Vérification des données d'entrée
-    if user_prefs.Soil_Type.lower() not in ["limon", "sable", "argile"]:
-        raise HTTPException(status_code=400, detail="Le type de sol doit être 'limon', 'sable' ou 'argile'.")
-    
-    if user_prefs.Water_Frequency.lower() not in ["quotidien", "semi-hebdomadaire", "hebdomadaire"]:
-        raise HTTPException(status_code=400, detail="La fréquence d'arrosage doit être 'quotidien', 'semi-hebdomadaire' ou 'hebdomadaire'.")
-        
+async def predict(
+    Sunlight_Hours: float = Query(..., alias= "Heures d'ensoleillement"),  # entre 0 et 12 heures
+    Temperature: float = Query(..., alias="Température"),  # entre 0 et 50°C
+    Humidity: float = Query(..., alias="Humidité"),  # entre 0 et 100%
+    Soil_Type: SoilType = Query(..., alias="Type de sol"),
+    Water_Frequency: WaterFrequency = Query(..., alias="fréquence d'arrosage")
+):
     # Transformer les données d'entrée
-    input_data = transform_input(user_prefs)
-
+    input_data = transform_input(PlantData(
+        Sunlight_Hours=Sunlight_Hours,
+        Temperature=Temperature,
+        Humidity=Humidity,
+        Soil_Type=Soil_Type,
+        Water_Frequency=Water_Frequency
+    ))
+    
     # Faire une prédiction avec le modèle
     prediction = model_pred_croissance.predict(input_data)
     
