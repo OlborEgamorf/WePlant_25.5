@@ -15,7 +15,18 @@
     import rateau from "$lib/assets/rateau.svg";
     import secateur from "$lib/assets/secateur.svg";
 
+    import automne from "$lib/assets/automne.svg";
+    import hivers from "$lib/assets/hivers.svg";
+    import printemps from "$lib/assets/printemps.svg";
 
+    import annuelles from "$lib/assets/annuelle.svg";
+    import bulbes from "$lib/assets/bulbe.svg";
+    import cactus from "$lib/assets/cactus.svg";
+    import grimpantes from "$lib/assets/climbing.svg";
+    import herbes from "$lib/assets/herb.svg";
+    import roses from "$lib/assets/rose.svg";
+    import arbustes from "$lib/assets/tree.svg";
+    import vivaces from "$lib/assets/vivaces.svg";
 
     
     import Input from "./input/input.svelte";
@@ -107,12 +118,12 @@
                 <div class="flex">
                     <div class="mb-3">
                         <div class="mb-1 font-semibold">Saison</div>
-                        <Selection bind:selected={saison} params={saisons} placeholder="Saison"></Selection>
+                        <Selection bind:selected={saison} params={saisons} placeholder="Saison" image={[printemps,soleil,automne,hivers]}></Selection>
                     </div>
 
                     <div class="mb-3">
                         <div class="mb-1 font-semibold">Catégorie de plante</div>
-                        <Selection bind:selected={categorie} params={plant_categories} placeholder="Catégorie"></Selection>
+                        <Selection bind:selected={categorie} params={plant_categories} placeholder="Catégorie" image={[vivaces,annuelles,bulbes,arbustes,grimpantes,cactus,herbes,roses]}></Selection>
                     </div>
                 </div>
             </div>
