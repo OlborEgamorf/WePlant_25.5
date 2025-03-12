@@ -12,7 +12,7 @@
     <Tabs.Root value="calc" class="pt-10">
         <Tabs.List class="grid mx-100 grid-cols-4">
           <Tabs.Trigger value="calc">Entretien</Tabs.Trigger>
-          <Tabs.Trigger value="grow">Prédiction de vie</Tabs.Trigger>
+          <Tabs.Trigger value="grow">Prédiction de croissance</Tabs.Trigger>
           <Tabs.Trigger value="stress">Stress hydrique</Tabs.Trigger>
           <Tabs.Trigger value="recom">Recommandation</Tabs.Trigger>
         </Tabs.List>

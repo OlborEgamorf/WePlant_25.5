@@ -4,6 +4,9 @@
     import Slider from "./slider/slider.svelte";
 
     import Banzai from "$lib/assets/banzai.svg"
+    import Eclair from "$lib/assets/eclair.svg"
+    import Eclair2 from "$lib/assets/thunder.svg"
+    import Fleur from "$lib/assets/flower.svg"
 
     let minMoisture:number = 10
     let minTemperture:number = 15
@@ -47,13 +50,20 @@
         })
     })
 
-    let dataAPI = $state({})
+    let dataAPI:APIStress = $state({prediction:0, prob0:0, prob1:0, prob2:0})
+    let health:number = $derived(dataAPI.prediction)
+
+    // let health = 2
 
     $effect(() => {
         moisture;temperature;phosphore;nitro;potassisum;
         fetch(`http://127.0.0.1:8000/stress_hydrique?soil_moisture=${moisture}&soil_temperature=${temperature}&nitrogen_level=${nitro}&phosphorus_level=${phosphore}&potassium_level=${potassisum}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
+    })
+
+    $effect(() => {
+        console.log(health)
     })
 
 </script>
@@ -105,7 +115,24 @@
 
 
     
-            <img src={Banzai} class="w-[300px] absolute top-0 left-0 z-5" alt="">
+            <img src={Banzai} class="w-[300px] absolute -top-40 left-15 z-5" alt="">
+
+            <img src={Eclair2} class="w-[40px] absolute -top-25 left-20 z-5 transition-all {health >= 1 ? 'animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-out' : 'opacity-0'}" alt="">
+            <img src={Eclair2} class="w-[40px] absolute -top-40 left-70 z-5 transition-all {health >= 1 ? 'animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-out ' : 'opacity-0'}" alt="">
+
+            <img src={Eclair2} class="w-[40px] absolute -top-0 left-72 z-5 transition-all {health == 2 ? 'animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-out ' : 'opacity-0'}" alt="">
+            <img src={Eclair2} class="w-[40px] absolute -top-50 left-42 z-5 transition-all {health == 2 ? 'animate-bounce animate-infinite animate-duration-[2000ms] animate-ease-out ' : 'opacity-0'}" alt="">
+
+            <img src={Fleur} class="w-[25px] absolute -top-38 left-45 z-5 transition-all {health <= 1 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+            <img src={Fleur} class="w-[25px] absolute -top-33 left-33 z-5 transition-all {health <= 1 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+            <img src={Fleur} class="w-[25px] absolute -top-29 left-55 z-5 transition-all {health == 0 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+
+            <img src={Fleur} class="w-[25px] absolute -top-28 left-72 z-5 transition-all {health <= 1 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+            <img src={Fleur} class="w-[25px] absolute -top-22 left-55 z-5 transition-all {health == 0 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+
+            <img src={Fleur} class="w-[25px] absolute -top-5 left-22 z-5 transition-all {health <= 1 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+            <img src={Fleur} class="w-[25px] absolute -top-10 left-43 z-5 transition-all  {health == 0 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
+            <img src={Fleur} class="w-[25px] absolute -top-14 left-35 z-5 transition-all  {health == 0 ? 'animate-spin animate-infinite animate-duration-[12000ms]' : 'opacity-0'}" alt="">
 
     
         </div>

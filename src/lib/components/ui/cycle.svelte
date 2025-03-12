@@ -132,7 +132,7 @@
 
     <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
 
-        <img src={setSoilTopSrc(soil)} class={setPotClass(pot, 3)}  alt="">
+        <img src={setSoilTopSrc(soil)} class={setPotClass(pot, 6)}  alt="">
 
         <img src={Pot} class={setPotClass(pot, 6)} alt="">
 
