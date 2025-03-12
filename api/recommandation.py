@@ -54,7 +54,7 @@ def get_recommendations(user_prefs: UserPreferences):
     while filtered_data.empty and current_filters:
         key = random.choice(list(current_filters.keys()))
         value = current_filters[key]
-        failed_criteria.append(f"'{key}' : '{value}' a été supprimé.")
+        failed_criteria.append(key)
         del current_filters[key]
         
         filtered_data = plant_data.copy()
@@ -67,13 +67,10 @@ def get_recommendations(user_prefs: UserPreferences):
     if user_prefs.max_height_cm is not None:
         filtered_data = filtered_data[filtered_data["max_height_cm"] <= user_prefs.max_height_cm]
     
+    success = True
     recommendations = filtered_data["Name"].head(5).tolist()
-    
     if not recommendations:
-        return {
-            "message": "Aucune correspondance exacte trouvée.",
-            "failed_criteria": failed_criteria,
-            "recommendations": plant_data["Name"].head(5).tolist()
-        }
+        recommendations = plant_data["Name"].head(5).tolist()
+        success = False
     
-    return {"recommendations": recommendations}
+    return {"recommendations": recommendations, "success":success, "failed_criteria": failed_criteria, "hasFailed":len(failed_criteria) != 0} 
