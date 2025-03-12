@@ -3,43 +3,55 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
 
-    let soils:Selects[] = [
-        {value:"clay", label:"Argile"},
-        {value:"sand", label:"Sable"},
-        {value:"loam", label:"Terre"}
-    ]
-
-    let pots:Selects[] = [
-        {value:"5l", label:"5 Litres"},
-        {value:"50l", label:"50 Litres"},
-        {value:"100l", label:"100 Litres"}
-    ]
-
-    let roots:Selects[] = [
-        {value:"short", label:"Racines courtes"},
-        {value:"medium", label:"Racines moyennes"},
-        {value:"long", label:"Racines longues"},
-    ]
-
-    let soil:Selected = $state({value:"loam", label:"Terre", disabled:false})
-
     let minMoisture:number = 0
+    let minTemperture:number = 0 
+    let minPhosphore:number = 0
+    let minNitro:number = 0
+    let minPotassium:number = 0
+
     let maxMoisture:number = 100
+    let maxTemperture:number = 35
+    let maxPhosphore:number = 100
+    let maxNitro:number = 100
+    let maxPotassium:number = 100
 
     let moisture:number[] = $state([50])
+    let temperature:number[] = $state([15])
+    let phosphore:number[] = $state([50])
+    let nitro:number[] = $state([50])
+    let potassisum:number[] = $state([50]) 
+
     let moistureTemp:number[] = $state([50])
+    let temperatureTemp:number[] = $state([15])
+    let phosphoreTemp:number[] = $state([50])
+    let nitroTemp:number[] = $state([50])
+    let potassisumTemp:number[] = $state([50]) 
+
     let incr:number = 0
 
     $effect(() => {
-        moistureTemp;
+        moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
         let i = ++incr
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
         sleep(1000).then(() => {
             if (i == incr) {
                 moisture = moistureTemp
+                temperature = temperatureTemp
+                phosphore = phosphoreTemp
+                nitro = nitroTemp
+                potassisum = potassisumTemp
                 incr = 0
             }
         })
+    })
+
+    let dataAPI = $state({})
+
+    $effect(() => {
+        moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
+        fetch('http://127.0.0.1:8000/cycle?')
+        .then(response => response.json())
+        .then(data => dataAPI = data);
     })
 
 </script>
@@ -58,8 +70,8 @@
             </div>
 
             <div>
-                <div class="mb-2 font-semibold">Température - {moistureTemp}°C</div>
-                <Slider bind:value={moistureTemp} min={minMoisture} max={maxMoisture} step={1} class="w-[180px]" />
+                <div class="mb-2 font-semibold">Température - {temperatureTemp}°C</div>
+                <Slider bind:value={temperatureTemp} min={minTemperture} max={maxTemperture} step={1} class="w-[180px]" />
             </div>
             
             <Separator class="my-4 bg-gray-950" />
@@ -70,18 +82,18 @@
             </div>
 
             <div class="mb-3">
-                <div class="mb-2 font-semibold">Taux de phosphore - {moistureTemp} %</div>
-                <Slider min={minMoisture} max={maxMoisture} step={1} class="w-[180px]" />
+                <div class="mb-2 font-semibold">Taux de phosphore - {phosphoreTemp} %</div>
+                <Slider min={minPhosphore} max={maxPhosphore} step={1} class="w-[180px]" />
             </div>
 
             <div class="mb-3">
-                <div class="mb-2 font-semibold">Taux de nitrogène - {moistureTemp} %</div>
-                <Slider min={minMoisture} max={maxMoisture} step={1} class="w-[180px]" />
+                <div class="mb-2 font-semibold">Taux de nitrogène - {nitroTemp} %</div>
+                <Slider min={minNitro} max={maxNitro} step={1} class="w-[180px]" />
             </div>
 
             <div>
-                <div class="mb-2 font-semibold">Taux de potassium - {moistureTemp} %</div>
-                <Slider min={minMoisture} max={maxMoisture} step={1} class="w-[180px]" />
+                <div class="mb-2 font-semibold">Taux de potassium - {potassisumTemp} %</div>
+                <Slider min={minPotassium} max={maxPotassium} step={1} class="w-[180px]" />
             </div>
         </div>
     </div>

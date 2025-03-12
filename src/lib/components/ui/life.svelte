@@ -49,7 +49,14 @@
         })
     })
 
-    
+    let dataAPI = $state({})
+
+    $effect(() => {
+        moisture;temperature;sun;soil;water
+        fetch('http://127.0.0.1:8000/life?')
+        .then(response => response.json())
+        .then(data => dataAPI = data);
+    })
 
 </script>
 
