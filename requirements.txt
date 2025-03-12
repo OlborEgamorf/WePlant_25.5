@@ -8,6 +8,7 @@ scikit-learn
 scipy
 fastapi[standard]
 prince
+random
+FATS
 pydantic
 joblib
-FATS
