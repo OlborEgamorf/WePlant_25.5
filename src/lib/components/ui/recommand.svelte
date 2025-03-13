@@ -1,4 +1,6 @@
 <script lang="ts">
+    import * as Tooltip from "$lib/components/ui/tooltip";
+
     import miOmbre from "$lib/assets/mi_ombre.svg";
     import ombre from "$lib/assets/ombre.svg";
     import soleil from "$lib/assets/soleil.svg";
@@ -28,15 +30,14 @@
     import arbustes from "$lib/assets/treeRec.svg";
     import vivaces from "$lib/assets/vivaces.svg";
 
-    
-    import * as Tooltip from "$lib/components/ui/tooltip";
     import Input from "./input/input.svelte";
     import Selection from "./selection.svelte";
     import Toggle from "./toggle.svelte";
 
+
     let soil:string = $state("Limon")
     let WaterNeed:string = $state("Moyen")
-    let SunNeed:string = $state("Mi-Ombre")
+    let SunNeed:string = $state("Mi-ombre")
     let Maintenance:string = $state("Moyen")    
     let saison:Selected = $state({value:"Printemps", label:"Printemps",disabled:false})
     let categorie:Selected = $state({value:"Vivaces", label:"Vivaces",disabled:false})
@@ -90,10 +91,9 @@
 
     $effect(() => {
         soil;WaterNeed;SunNeed;Maintenance;saison;categorie;minHeight;maxHeight
-        fetch(`http://127.0.0.1:8000/recommend?sun_needs=${SunNeed}&water_needs=${WaterNeed}&maintenance=${Maintenance}&soil=${soil}&season=${saison}&plant_category=${categorie}&min_height=${minHeight}&max_height=${maxHeight}`)
+        fetch(`http://127.0.0.1:8000/recommend?sun_needs=${SunNeed}&water_needs=${WaterNeed}&maintenance=${Maintenance}&soil=${soil}&season=${saison.value}&plant_category=${categorie.value}&min_height=${minHeight}&max_height=${maxHeight}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
-        
     })
 
     let recomID:string = $state("0")
