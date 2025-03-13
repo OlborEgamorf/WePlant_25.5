@@ -262,6 +262,26 @@ async def predict(
     return {"prediction":int(prediction[0])}
 
 
+SELECTED_COLUMNS = [
+    "Name", 
+    "Desc",
+    "SunNeeds", 
+    "WaterNeeds", 
+    "Maintenance", 
+    "Type de Sol", 
+    "saison", 
+    "plant_categories", 
+    "min_height_cm", 
+    "max_height_cm"
+]
+
+def df_to_dict(df: pd.DataFrame) -> list:
+    """Convertit un DataFrame en liste de dictionnaires compatibles JSON avec colonnes sélectionnées"""
+    return [
+        {col: (str(value) if isinstance(value, (list, dict)) else value) 
+         for col, value in record.items() if col in SELECTED_COLUMNS}
+        for record in df.to_dict(orient='records')
+    ]
 
 csv_file = "./data/A_to_Z_Flowers_indicateurs.csv"  
 plant_data = pd.read_csv(csv_file)
@@ -274,43 +294,48 @@ def get_recommendations(
     soil: Optional[str] = Query(None, description="Type de sol"),
     season: Optional[str] = Query(None, description="Saison de croissance"),
     plant_category: Optional[str] = Query(None, description="Catégories de plantes"),
-    min_height: Optional[float] = Query(None, description="Hauteur minimale en cm"),
-    max_height: Optional[float] = Query(None, description="Hauteur maximale en cm")):
+    minHeight: Optional[float] = Query(None, description="Hauteur minimale en cm"),
+    maxHeight: Optional[float] = Query(None, description="Hauteur maximale en cm")):
     filtered_data = plant_data.copy()
     failed_criteria = [] 
-    current_filters = {
+    filters = {
         "SunNeeds": sun_needs,
         "WaterNeeds": water_needs,
         "Maintenance": maintenance,
         "Type de Sol": soil,
         "saison": season,
         "plant_categories": plant_category,
+        "min_height_cm": minHeight,
+        "max_height_cm": maxHeight
     }
     
-    for key, value in current_filters.items():
+    for key, value in filters.items():
         if value and key in plant_data.columns and value != "undefined":
             filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
     
-    while filtered_data.empty and current_filters:
-        key = random.choice(list(current_filters.keys()))
-        value = current_filters[key]
-        failed_criteria.append(key)
-        del current_filters[key]
+    while filtered_data.empty and filters:
+        removed_filter = random.choice(list(filters.keys()))
+        failed_criteria.append(removed_filter)
+        del filters[removed_filter]
         
         filtered_data = plant_data.copy()
-        for key, value in current_filters.items():
+        for key, value in filters.items():
             if value and key in plant_data.columns:
-                filtered_data = filtered_data[filtered_data[key].str.contains(value, na=False, case=False)]
+                filtered_data = filtered_data[
+                    filtered_data[key].str.contains(value, case=False, na=False)
+                ]
 
-    if min_height is not None:
-        filtered_data = filtered_data[filtered_data["min_height_cm"] >= min_height]
-    if max_height is not None:
-        filtered_data = filtered_data[filtered_data["max_height_cm"] <= max_height]
+    if minHeight is not None:
+        filtered_data = filtered_data[filtered_data["min_height_cm"] >= minHeight]
+    if maxHeight is not None:
+        filtered_data = filtered_data[filtered_data["max_height_cm"] <= maxHeight]
     
-    success = True
-    recommendations = filtered_data["Name"].head(5).tolist()
-    if not recommendations:
-        recommendations = plant_data["Name"].head(5).tolist()
-        success = False
+    result_count = min(5, len(filtered_data))
+    final_data = filtered_data[SELECTED_COLUMNS].head(result_count) if not filtered_data.empty else plant_data[SELECTED_COLUMNS].head(5)
     
-    return {"recommendations": recommendations, "success":success, "failed_criteria": failed_criteria, "hasFailed":len(failed_criteria) != 0} 
+    return {
+        "recommendations": df_to_dict(final_data),
+        "success": not filtered_data.empty,
+        "failed_criteria": failed_criteria,
+        "hasFailed": len(failed_criteria) > 0
+    }

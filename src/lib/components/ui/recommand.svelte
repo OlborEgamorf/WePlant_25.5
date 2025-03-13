@@ -29,6 +29,7 @@
     import vivaces from "$lib/assets/vivaces.svg";
 
     
+    import * as Tooltip from "$lib/components/ui/tooltip";
     import Input from "./input/input.svelte";
     import Selection from "./selection.svelte";
     import Toggle from "./toggle.svelte";
@@ -44,7 +45,7 @@
     let maxHeight:number = $state(60)
 
     let soils:Selects[] = [
-        {value:"Limon", label:"Terre"},
+        {value:"Limon", label:"Limon"},
         {value:"Argile", label:"Argile"},
         {value:"Sable", label:"Sable"},
     ]
@@ -99,6 +100,14 @@
 
     function onclickRecom(this : HTMLElement) {
         recomID = this.id
+    }
+
+    $effect(() => {
+        console.log(dataAPI)
+    })
+
+    function getPlantName(name:string) {
+        return name.split(" (")[0];
     }
 
 </script>
@@ -156,20 +165,47 @@
     </div>
 
     <div class="col-start-2 flex flex-col items-start">
+        {#if dataAPI.hasFailed}
+            <div class="text-red-500 text-sm mt-2 m-5 bg-red-100 p-2 rounded-md">
+                <p>Attention, tous les filtres n'ont pas été appliqués !</p>
+                <p class="mt-2">{dataAPI.failed_criteria.join(', ')}</p>
+            </div>
+        {/if}
+        
         <div class="w-full mx-10">
-            <div class="grid grid-cols-5 gap-x-4 gap-y-10">
+            <div class="grid grid-cols-5 gap-x-4 gap-y-10 ">
                 {#each dataAPI.recommendations as plant, i}
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
-                    <div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md" id={i.toString()} onclick={onclickRecom}>{plant}</div>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger><div class="w-full aspect-[1/1] h-20 bg-red-500 rounded-md" id={i.toString()} onclick={onclickRecom}></div></Tooltip.Trigger>
+                        <Tooltip.Content>
+                          <p>{getPlantName(plant.Name)}</p>
+                        </Tooltip.Content>
+                      </Tooltip.Root>
                 {/each}    
                 
-                <div class="col-span-3 w-full h-60 bg-red-500 rounded-md"></div>
-
+                <div class="col-span-3 w-60 h-60 bg-red-500 row-start-2 rounded-md"></div>
                 {#each dataAPI.recommendations as plant, i}
-                    <div class="col-span-2 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
-                        <p>{plant}</p>
+
+                    <div class="col-span-2 row-start-2 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
+                        <div class="mb-3">
+                            <p class="font-bold">{getPlantName(plant.Name)}</p>
+                            <div class="font-semibold text-sm mt-2">Caractéristiques:</div>
+                            <div class="grid grid-cols-2 gap-2 text-sm mt-1">
+                                <div><strong>Soleil :</strong> {plant.SunNeeds}</div>
+                                <div><strong>Arrosage :</strong> {plant.WaterNeeds}</div>
+                                <div><strong>Entretien :</strong> {plant.Maintenance}</div>
+                                <div><strong>Sol :</strong> {plant["Type de Sol"]}</div>
+                                <div><strong>Saison :</strong> {plant.saison}</div>
+                                <div><strong>Catégorie :</strong> {plant.plant_categories}</div>
+                                <div class="col-span-2"><strong>Taille :</strong> {plant.min_height_cm} - {plant.max_height_cm} cm</div>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-span-5 row-start-3 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
+                        <div class="text-sm">{plant.Desc}</div>
+                    </div>  
                 {/each}
             </div>
         </div>

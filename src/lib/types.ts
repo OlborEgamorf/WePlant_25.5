@@ -9,11 +9,24 @@ type Selected = {
     disabled:false
 }
 
+type Plant = {
+    Name: string;
+    Desc: string;
+    SunNeeds: string;
+    WaterNeeds: string;
+    Maintenance: string;
+    "Type de Sol": string;
+    saison: string;
+    plant_categories: string;
+    min_height_cm: number;
+    max_height_cm: number;
+}
+
 type APIRecommandation = {
-    recommendations:string[],
-    success:boolean,
-    failed_criteria:string[],
-    hasFailed:boolean
+    recommendations: Plant[];
+    success: boolean;
+    failed_criteria: string[];
+    hasFailed: boolean;
 }
 
 type APIStress = {
@@ -25,4 +38,8 @@ type APIStress = {
 
 type APIPredict = {
     prediction:number
+    recommendations: Plant[];
+    success: boolean;
+    failed_criteria: string[];
+    hasFailed: boolean;
 }
