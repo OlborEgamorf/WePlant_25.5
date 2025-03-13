@@ -283,6 +283,17 @@ def df_to_dict(df: pd.DataFrame) -> list:
         for record in df.to_dict(orient='records')
     ]
 
+CRITERES_LABELS= {
+    "SunNeeds": "Besoins en soleil",
+    "WaterNeeds": "Besoins en eau",
+    "Maintenance": "Niveau de maintenance",
+    "Type de Sol": "Type de sol",
+    "saison": "Saison de croissance",
+    "plant_categories": "Catégories de plantes",
+    "min_height_cm": "Taille minimale (cm)",
+    "max_height_cm": "Taille maximale (cm)"
+}
+
 csv_file = "./data/A_to_Z_Flowers_indicateurs.csv"  
 plant_data = pd.read_csv(csv_file)
 
@@ -315,7 +326,7 @@ def get_recommendations(
     
     while filtered_data.empty and filters:
         removed_filter = random.choice(list(filters.keys()))
-        failed_criteria.append(removed_filter)
+        failed_criteria.append(CRITERES_LABELS.get(removed_filter, removed_filter))        
         del filters[removed_filter]
         
         filtered_data = plant_data.copy()
