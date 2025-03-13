@@ -1,14 +1,16 @@
 <script lang="ts">
+    import * as Tabs from "$lib/components/ui/tabs/index.js";
+
     import Cycle from "$lib/components/ui/cycle.svelte";
     import Life from "$lib/components/ui/life.svelte";
     import Recommand from "$lib/components/ui/recommand.svelte";
     import Stress from "$lib/components/ui/stress.svelte";
-    import * as Tabs from "$lib/components/ui/tabs/index.js";
-    import fleur from "$lib/fleur.png";
-    import bambou from "$lib/bambou.png";
+    
+    import fleur from "$lib/assets/illustration/fleur.png";
+    import bambou from "$lib/assets/illustration/bambou.png";
     import home from "$lib/assets/home.svg";
-    import logo from "$lib/weplante.png";
-    import pv from "$lib/pv.png";
+    import logo from "$lib/assets/illustration/weplante.png";
+    import UPV from "$lib/assets/illustration/upv.png";
 </script>
 
 <img src={fleur} class="w-auto h-70 fixed top-0 right-0" alt="fleur" />
@@ -44,10 +46,12 @@
           
         </Tabs.Content>
         <Tabs.Content value="recom">
+
           <Recommand></Recommand>
+          
         </Tabs.Content>
       </Tabs.Root>   
 
     <img src={logo} class=" hidden fixed w-auto h-15 absolute bottom-2 right-2" alt="logo" />
-    <img src={pv} class="hidden fixed w-auto h-15 absolute bottom-2 right-17" alt="logo" />
+    <img src={UPV} class="hidden fixed w-auto h-15 absolute bottom-2 right-17" alt="logo" />
 </div>

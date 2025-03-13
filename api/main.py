@@ -160,8 +160,8 @@ async def get_sol_parameters(
 #API Stress hydrique
 
 def load_stress():
-    model_stress = joblib.load("data/svm_plant_health.pkl")
-    scaler_stress = joblib.load("data/scaler.pkl")
+    model_stress = joblib.load("./models/svm_plant_health.pkl")
+    scaler_stress = joblib.load("./models/scaler.pkl")
     return model_stress, scaler_stress
 
 model_stress, scaler_stress = load_stress()
@@ -193,7 +193,7 @@ def predict_health_status(
 # API Croissance Plante
 
 # Charger le modèle RandomForest enregistré
-model_pred_vie = joblib.load('./data/random_forest_model_plant_growth.pkl')
+model_pred_vie = joblib.load('./models/random_forest_model_plant_growth.pkl')
 
 # Définir les valeurs possibles pour Soil_Type et Water_Frequency avec Enum
 class SoilType(str, Enum):

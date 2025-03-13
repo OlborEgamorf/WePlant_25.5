@@ -39,8 +39,7 @@
     import Toggle from "./toggle.svelte";
     import Loading from "./loading.svelte";
 
-
-
+    
     let soil:string = $state("Limon")
     let WaterNeed:string = $state("Moyen")
     let SunNeed:string = $state("Mi-ombre")

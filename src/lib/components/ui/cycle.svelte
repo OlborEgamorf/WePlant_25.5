@@ -17,7 +17,7 @@
     import AroFull from "$lib/assets/Arrosoire_plein.svg"
     import AroLil from "$lib/assets/Arrosoire_vide.svg"
 
-    import GraphCalc from "$lib/assets/graphs.png"
+    import GraphCalc from "$lib/assets/explore/graphs.png"
     
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
@@ -44,7 +44,7 @@
 
     let soil:string = $state("loam")
     let root:string = $state("superficielles")
-    let pot:string = $state("XL")
+    let pot:string = $state("M")
 
     let minMoisture:number = 0
     let maxMoisture:number = 50

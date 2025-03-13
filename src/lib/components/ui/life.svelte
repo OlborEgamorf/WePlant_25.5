@@ -11,7 +11,6 @@
     import Calendar from "$lib/assets/calendar.svg";
 
     import Grow1 from "$lib/assets/grow_1.svg"
-    import Grow2 from "$lib/assets/grow_2.svg"
     import Grow3 from "$lib/assets/grow_3.svg"
     import Grow4 from "$lib/assets/grow_4.svg"
     import Loading from "./loading.svelte";

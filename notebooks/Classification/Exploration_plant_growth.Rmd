@@ -1,0 +1,200 @@
+---
+title: "Exploration"
+output: html_document
+date: "2025-03-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Installation et Traitement des Données
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(caTools)
+library(caret)
+library(pROC)
+library(car)
+
+df <- read.csv("../data/plant_growth_data.csv", sep = ";", header = TRUE)
+print(df)
+```
+
+## Convertion des variables qualitatives
+
+```{r}
+glimpse(df)
+
+# Convertir les variables catégoriques en facteurs
+df$Soil_Type <- as.factor(df$Soil_Type)
+df$Water_Frequency <- as.factor(df$Water_Frequency)
+df$Fertilizer_Type <- as.factor(df$Fertilizer_Type)
+df$Growth_Milestone <- as.factor(df$Growth_Milestone)  # Déjà en facteur mais on s'assure
+
+# Vérifier les types des colonnes
+str(df)
+```
+# Analyse des variables
+
+```{r}
+ggplot(df, aes(x = Growth_Milestone, y = Sunlight_Hours, fill = Growth_Milestone)) +
+  geom_boxplot() +
+  labs(title = "Distribution des heures de soleil par Growth_Milestone", 
+       x = "Growth_Milestone", y = "Sunlight_Hours") +
+  theme_minimal()
+
+ggplot(df, aes(x = Growth_Milestone, y = Temperature, fill = Growth_Milestone)) +
+  geom_boxplot() +
+  labs(title = "Température par Growth_Milestone") +
+  theme_minimal()
+
+ggplot(df, aes(x = Growth_Milestone, y = Humidity, fill = Growth_Milestone)) +
+  geom_boxplot() +
+  labs(title = "Humidité par Growth_Milestone") +
+  theme_minimal()
+
+```
+```{r}
+# Comparaison du taux de croissance en fonction du type de fertilisant
+graph <- ggplot(df, aes(x = Fertilizer_Type, fill = Growth_Milestone)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Effet du Fertilisant sur la Croissance",
+    x = "Type de Fertilisant",  # Changer le label de l'axe X
+    fill = "Étapes de Croissance"  # Changer le label de la légende
+  )
+
+graph
+# Sauvegarde du graphique dans un fichier PNG
+ggsave("graphique_croissance.png", plot = graph, width = 8, height = 6, dpi = 300)
+
+```
+
+
+```{r}
+ggplot(df, aes(x = Temperature, y = Humidity, color = Growth_Milestone)) +
+  geom_point(alpha = 0.7) +
+  labs(title = "Relation entre Température et Humidité selon Growth_Milestone") +
+  theme_minimal()
+```
+
+```{r}
+# Distribution jointe Soil_Type x Growth_Milestone
+table(df$Soil_Type, df$Growth_Milestone)
+
+# Distribution jointe Water_Frequency x Growth_Milestone
+table(df$Water_Frequency, df$Growth_Milestone)
+
+# Distribution jointe Fertilizer_Type x Growth_Milestone
+table(df$Fertilizer_Type, df$Growth_Milestone)
+```
+
+Interprétation des résultats :
+
+-   Si la p-value est \< 0.05, cela signifie que la variable qualitative est associée à Growth_Milestone (pas indépendante).
+-   Si la p-value est \> 0.05, la variable et la cible sont indépendantes (pas de lien statistique fort).
+
+```{r}
+# Test du Chi-2 pour Soil_Type
+chisq.test(df$Soil_Type, df$Growth_Milestone)
+
+# Test du Chi-2 pour Water_Frequency
+chisq.test(df$Water_Frequency, df$Growth_Milestone)
+
+# Test du Chi-2 pour Fertilizer_Type
+chisq.test(df$Fertilizer_Type, df$Growth_Milestone)
+```
+ Effet du type de fertilisant sur la croissance :
+
+    X² = 21.87, p < 0.0001 ⏩ Très significatif ! Le type de fertilisant a un impact majeur sur la croissance des plantes.
+
+## Modèle avec Fertile
+
+```{r}
+set.seed(123)
+
+# Modèle de régression logistique
+model_full <- glm(Growth_Milestone ~ Sunlight_Hours+Humidity+Temperature+Soil_Type+Water_Frequency+Fertilizer_Type, data = df, family = binomial())
+
+# Résumé du modèle
+summary(model_full)
+
+cor(df[, sapply(df, is.numeric)])
+alias(model_full)
+
+vif(model_full)
+
+predictions = predict(model_full, type = "response")
+df$pred_class <- ifelse(predictions > 0.5, 1, 0)
+
+# Calculer l'accuracy
+accuracy <- mean(df$pred_class == df$Growth_Milestone)
+
+# Afficher l'accuracy
+accuracy
+
+# Calcul de la courbe ROC
+roc_curve <- roc(df$Growth_Milestone, predictions)
+
+# Afficher l'AUC
+auc(roc_curve)
+```
+
+
+
+# Modèl sans Fertilizer
+
+```{r}
+# Enlever la colonne Fertilizer_Type
+df$Fertilizer_Type <- NULL
+
+# Vérifier
+head(df)
+```
+
+```{r}
+set.seed(123)
+
+# Modèle de régression logistique
+model_full <- glm(Growth_Milestone ~ Sunlight_Hours+Humidity+Soil_Type+Temperature+Water_Frequency, data = df, family = binomial())
+
+# Résumé du modèle
+summary(model_full)
+
+vif(model_full)
+
+predictions = predict(model_full, type = "response")
+df$pred_class <- ifelse(predictions > 0.5, 1, 0)
+# Calculer l'accuracy
+accuracy <- mean(df$pred_class == df$Growth_Milestone)
+
+# Afficher l'accuracy
+accuracy
+
+# Calcul de la courbe ROC
+roc_curve <- roc(df$Growth_Milestone, predictions)
+
+# Afficher l'AUC
+auc(roc_curve)
+```
+
+```{r}
+set.seed(123)
+
+# Définir le contrôle de validation croisée
+train_control <- trainControl(method = "cv", number = 10)  # K-Fold à 10 plis
+
+# Modèle de régression logistique avec validation croisée
+model_cv <- train(Growth_Milestone ~ Sunlight_Hours*Humidity*Soil_Type*Temperature+Water_Frequency,
+                  data = df,
+                  method = "glm",  # Régression logistique
+                  family = "binomial",  # Famille binomiale pour régression logistique
+                  trControl = train_control)  # Appliquer la validation croisée
+
+# Résumé des résultats de la validation croisée
+print(model_cv)
+```
+
+

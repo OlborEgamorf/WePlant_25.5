@@ -1,14 +1,18 @@
 <script lang="ts">
-    import bambou from "$lib/bambou.png";
-    import fleur from "$lib/fleur.png";
-    import fleur2 from "$lib/fleur2.jpg";
-    import logo from "$lib/weplante.png";
+    import bambou from "$lib/assets/illustration/bambou.png";
+    import fleur from "$lib/assets/illustration/fleur.png";
+    import fleur2 from "$lib/assets/illustration/fleur2.jpg";
+    import logo from "$lib/assets/illustration/weplante.png";
+    import UPV from "$lib/assets/illustration/upv.png";
+    import MDW from "$lib/assets/illustration/MDW.webp";
   </script>
   
   <div class="bg-[#EBDC94] relative flex flex-col justify-center items-center min-h-screen">
     <img src={fleur} class="w-auto h-70 absolute top-0 right-0" alt="fleur" />
     <img src={bambou} class="w-auto h-70 absolute bottom-0 left-0" alt="fleur" />
-    <img src={logo} class="w-auto h-30 absolute top-0 left-0" alt="logo" />
+    <img src={logo} class="w-auto h-15 absolute top-2 left-2" alt="logo" />
+    <img src={UPV} class="w-auto h-11 absolute top-4.5 left-20.5 invert" alt="logo" />
+    <img src={MDW} class="w-auto h-10 absolute top-5 left-38" alt="logo" />
   
     <div class="flex flex-col items-center text-zinc-700">
       <h1 class="text-4xl text-center py-10 font-[Shikaku_Serif]">
@@ -45,7 +49,7 @@
     </div>
   
     <a href="/calculator" class="mt-8 px-4 py-2 bg-[#DED08C] rounded-md font-[Futura_Md_BT] text-justify text-xl">
-      Découvrez les réponses !
+        Découvrez les réponses !
     </a>
   </div>
   
