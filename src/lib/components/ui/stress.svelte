@@ -1,14 +1,12 @@
 <script lang="ts">
-    import Results from "$lib/components/ui/results.svelte";
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
-
-    import LoaderCircle from "lucide-svelte/icons/loader-circle";
 
     import Banzai from "$lib/assets/banzai.svg"
     import Eclair from "$lib/assets/eclair.svg"
     import Eclair2 from "$lib/assets/thunder.svg"
     import Fleur from "$lib/assets/flower.svg"
+    import Loading from "./loading.svelte";
 
     let minMoisture:number = 10
     let minTemperture:number = 15
@@ -36,6 +34,7 @@
 
     let incr:number = 0
     let change:boolean= $state(false)
+    let load:boolean = $state(false)
 
     $effect(() => {
         moistureTemp;temperatureTemp;phosphoreTemp;nitroTemp;potassisumTemp;
@@ -62,13 +61,15 @@
 
     $effect(() => {
         moisture;temperature;phosphore;nitro;potassisum;
+        load = true
         fetch(`http://127.0.0.1:8000/stress_hydrique?soil_moisture=${moisture}&soil_temperature=${temperature}&nitrogen_level=${nitro}&phosphorus_level=${phosphore}&potassium_level=${potassisum}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
     })
 
     $effect(() => {
-        console.log(health)
+        dataAPI;
+        load = false;
     })
 
 </script>
@@ -108,10 +109,12 @@
                 <Slider bind:value={nitroTemp} min={minNitro} max={maxNitro} step={1} class="w-[180px]" />
             </div>
 
-            <div>
+            <div class="mb-5">
                 <div class="mb-2 font-semibold">Taux de potassium - {potassisumTemp} %</div>
                 <Slider bind:value={potassisumTemp} min={minPotassium} max={maxPotassium} step={1} class="w-[180px]" />
             </div>
+
+            <Loading {change} {load}></Loading>
         </div>
     </div>
 
@@ -119,11 +122,6 @@
         
         <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
 
-            {#if change}
-                <div class="col-start-2 row-start-1 row-span-2 absolute flex -top-60 left-60 items-center">
-                    <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-                    Chut chut ça pousse !</div>
-            {/if}
             
             <img src={Banzai} class="w-[300px] absolute -top-40 left-15 z-5" alt="">
 
@@ -148,7 +146,7 @@
         </div>
     </div>
 
-    <div class="col-start-1 col-span-2 row-start-2 mt-10">
-        <Separator class="mb-4"></Separator>
+    <div class="col-start-1 col-span-2 row-start-2 mt-5">
+        <Separator class="mb-4 bg-gray-950 px-100"></Separator>
     </div>
 </div>

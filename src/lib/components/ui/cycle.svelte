@@ -15,44 +15,50 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
     import Toggle from "./toggle.svelte";
+    import Loading from "./loading.svelte";
 
     let soils:Selects[] = [
-        {value:"loam", label:"Terre"},
+        {value:"loam", label:"Limon"},
         {value:"clay", label:"Argile"},
         {value:"sand", label:"Sable"},
     ]
 
     let pots:Selects[] = [
-        {value:"5l", label:"5 Litres"},
-        {value:"50l", label:"50 Litres"},
-        {value:"100l", label:"100 Litres"}
+        {value:"M", label:"M"},
+        {value:"L", label:"L"},
+        {value:"XL", label:"XL"}
     ]
 
     let roots:Selects[] = [
-        {value:"short", label:"Superficielles"},
-        {value:"medium", label:"Moyennes"},
-        {value:"long", label:"Profondes"},
+        {value:"superficielles", label:"Superficielles"},
+        {value:"moyennes", label:"Moyennes"},
+        {value:"profondes", label:"Profondes"},
     ]
 
     let soil:string = $state("loam")
-    let root:string = $state("medium")
-    let pot:string = $state("5l")
+    let root:string = $state("profondes")
+    let pot:string = $state("M")
 
     let minMoisture:number = 0
     let maxMoisture:number = 100
 
     let moisture:number[] = $state([50])
     let moistureTemp:number[] = $state([50])
+
     let incr:number = 0
+    let change:boolean= $state(false)
+    let load:boolean = $state(false)
 
     $effect(() => {
         moistureTemp;
         let i = ++incr
+        change = true
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
         sleep(700).then(() => {
             if (i == incr) {
                 moisture = moistureTemp
                 incr = 0
+                change = false
             }
         })
     })
@@ -61,9 +67,15 @@
 
     $effect(() => {
         soil;root;pot;moisture
-        fetch('http://127.0.0.1:8000/cycle?')
+        load = true
+        fetch(`http://127.0.0.1:8000/parametres_sol?sol=${soil}&racine=${root}&taille_pot=${pot}&humidity=${moisture}`)
         .then(response => response.json())
         .then(data => dataAPI = data);
+    })
+
+    $effect(() => {
+        dataAPI;
+        load = false;
     })
 
     function setPotClass(pot:string, z:number) {
@@ -118,14 +130,16 @@
             </div>
 
             <div class="mb-3">
-                <div class="mb-2 font-semibold">Type de pot</div>
+                <div class="mb-2 font-semibold">Taille de pot</div>
                 <Toggle bind:selected={pot} params={pots}></Toggle>
             </div>
             
-            <div>
+            <div class="mb-5">
                 <div class="mb-2 font-semibold">Taux d'humidité - {moistureTemp} %</div>
                 <Slider bind:value={moistureTemp} min={minMoisture} max={maxMoisture} step={1} class="w-[180px]" />
             </div>
+
+            <Loading {change} {load}></Loading>
             
         </div>
     </div>
@@ -145,5 +159,9 @@
         <img src={Tree} class="w-[200px] absolute -top-46 left-0 z-5" alt="">
         <img src={Roots} class={setRootsClass(root)} alt="">
 
+    </div>
+
+    <div class="col-start-1 col-span-2 row-start-2 mt-5">
+        <Separator class="mb-4 bg-gray-950 px-100"></Separator>
     </div>
 </div>

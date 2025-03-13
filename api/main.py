@@ -22,7 +22,7 @@ app.add_middleware(
 
 # Définition des données sous forme de DataFrame
 data = {
-    "Sol": ["Sableux", "Limoneux", "Argileux"],
+    "Sol": ["sand", "loam", "clay"],
     "θopt_racinaires_profonds": [13.0, 20.5, 33.0],
     "θopt_racinaires_moyens": [14.0, 23.5, 38.0],
     "θopt_racinaires_superficiels": [5.9, 11.4, 22.9],
@@ -42,9 +42,9 @@ types_racine_mapping = {
 
 # Densité apparente des sols (en g/cm³)
 densite_apparente = {
-    "Sableux": 1.6,
-    "Limoneux": 1.3,
-    "Argileux": 1.1
+    "sand": 1.6,
+    "loam": 1.3,
+    "clay": 1.1
 }
 
 # Profondeur des pots en dm
@@ -68,7 +68,7 @@ async def root():
 
 @app.get("/parametres_sol")
 async def get_sol_parameters(
-    sol: str = Query(..., description="Type de sol: Sableux, Limoneux, Argileux"),
+    sol: str = Query(..., description="Type de sol: sand, loam, clay"),
     racine: str = Query(..., description="Type de racines: Profondes, Moyennes, Superficielles"),
     taille_pot: str = Query("M", description="Taille du pot: M, L, XL"),
     humidity: float = Query(..., description="Humidité actuelle du sol en %")
@@ -77,7 +77,6 @@ async def get_sol_parameters(
     Récupère les paramètres d'un sol et d'un type de racine,
     puis calcule la Réserve Utile (RU) et indique si l'arrosage est nécessaire.
     """
-    sol = sol.capitalize()
     racine = racine.lower()
     taille_pot = taille_pot.upper()
 

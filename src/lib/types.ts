@@ -23,6 +23,7 @@ type Plant = {
 }
 
 type APIRecommandation = {
+    prediction:number
     recommendations: Plant[];
     success: boolean;
     failed_criteria: string[];
@@ -38,8 +39,4 @@ type APIStress = {
 
 type APIPredict = {
     prediction:number
-    recommendations: Plant[];
-    success: boolean;
-    failed_criteria: string[];
-    hasFailed: boolean;
 }

@@ -5,15 +5,22 @@
     import ClayIcon from "$lib/assets/argile.svg";
     import SandIcon from "$lib/assets/sable.svg";
     import LoamIcon from "$lib/assets/terre.svg";
+
+    import Watch from "$lib/assets/watch.svg";
+    import Clock from "$lib/assets/clock.svg";
+    import Calendar from "$lib/assets/calendar.svg";
+
     import Grow1 from "$lib/assets/grow_1.svg"
     import Grow2 from "$lib/assets/grow_2.svg"
     import Grow3 from "$lib/assets/grow_3.svg"
     import Grow4 from "$lib/assets/grow_4.svg"
+    import Loading from "./loading.svelte";
+    import Separator from "./separator/separator.svelte";
 
     let animation = true
 
     let soils:Selects[] = [
-        {value:"loam", label:"Terre"},
+        {value:"loam", label:"Limon"},
         {value:"clay", label:"Argile"},
         {value:"sand", label:"Sable"},
     ]
@@ -36,6 +43,8 @@
     let maxSun:number = 100
 
     let incr:number = 0
+    let change:boolean= $state(false)
+    let load:boolean = $state(false)
 
     let moisture:number[] = $state([50])
     let temperature:number[] = $state([20])
@@ -48,6 +57,7 @@
     $effect(() => {
         moistureTemp; temperatureTemp; sunTemp;
         let i = ++incr
+        change = true
         const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
         sleep(700).then(() => {
             if (i == incr) {
@@ -55,6 +65,7 @@
                 temperature = temperatureTemp
                 sun = sunTemp
                 incr = 0
+                change = false
             }
         })
     })
@@ -69,6 +80,7 @@
     let stateAnim = $state(-1)
 
     $effect(() => {
+        load = true
         moisture;temperature;sun;soil;waterNeed
         fetch(`http://127.0.0.1:8000/predict_croissance?sunlight_hours=${sun}&temperature=${temperature}&moisture=${moisture}&soil=${soil}&water_freq=${waterNeed}`)
         .then(response => response.json())
@@ -82,30 +94,31 @@
         else if (predi == -1 && dataAPI.prediction == 0) stateAnim = 1
 
         predi = dataAPI.prediction
+        load = false
     })
 
     function setAnimBad(stateAnim:number) {
         if (stateAnim == 0) return "hidden"
-        if (stateAnim == 1 || stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal'
-        if (stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse'
+        if (stateAnim == 1 || stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal'
+        if (stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
     }
 
     function setAnimNeutral(stateAnim:number ) {
-        if (stateAnim == 0 || stateAnim == 1) return 'animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse'
+        if (stateAnim == 0 || stateAnim == 1) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
         else return  "hidden"
     }
 
     function setAnimGood(stateAnim:number) {
         if (stateAnim == 1) return "hidden"
-        if (stateAnim == 0 || stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal'
-        if (stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse'
+        if (stateAnim == 0 || stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal'
+        if (stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
     }
 
 </script>
 
 <div class="grid mx-10 my-5 lg:mx-75 items-center grid-cols-2 gap-x-10">
     <div class="col-start-1">
-        <div class="w-[300px]">
+        <div class="w-[420px]">
             <div class="mb-5">
                 <div class="font-bold text-xl">Caractéristiques de la plante</div>
                 <div>Ces caractéristiques concernent la vie de la plante et de kjq...</div>
@@ -137,10 +150,12 @@
                 <Slider bind:value={sunTemp} min={minSun} max={maxSun} step={1} class="w-[180px]" />
             </div>
 
-            <div>
+            <div class="mb-5">
                 <div class="mb-2 font-semibold">Fréquence d'arosage</div>
-                <Toggle bind:selected={waterNeed} params={water}></Toggle>
+                <Toggle bind:selected={waterNeed} params={water} image={[Watch,Clock,Calendar]} styles={"w-6 h-6"}></Toggle>
             </div>
+
+            <Loading {change} {load}></Loading>
 
             
         </div>
@@ -148,23 +163,28 @@
 
     <div class="col-start-2 row-start-1 row-span-2">
         <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
+            
             {#if stateAnim == -1}
                 <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5" alt="">
             {:else if stateAnim == 0}
-                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse" alt="">
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal" alt="">
+                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
             {:else if stateAnim == 1}
-                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse" alt="">
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal" alt="">
+                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
             {:else if stateAnim == 2}
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse" alt="">
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal" alt="">
+                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
             {:else if stateAnim == 3}
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1000 animate-reverse" alt="">
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-1500 animate-normal" alt="">
+                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
             {/if}           
 
         </div>
+    </div>
+
+    <div class="col-start-1 col-span-2 row-start-2 mt-5">
+        <Separator class="mb-4 bg-gray-950 px-100"></Separator>
     </div>
 
 </div>
