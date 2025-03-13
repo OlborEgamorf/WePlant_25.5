@@ -11,3 +11,4 @@ prince
 FATS
 pydantic
 joblib
+openai

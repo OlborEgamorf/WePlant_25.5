@@ -8,6 +8,10 @@ import numpy as np
 from enum import Enum
 from typing import Optional
 import openai
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -352,9 +356,9 @@ def get_recommendations(
         "hasFailed": len(failed_criteria) > 0
     }
 
-openai.api_key =  ""
+openai.api_key = os.getenv("OPEN_AI_KEY")
 @app.get("/recommend_chat")
-def get_recommendations(sun_needs:Optional[str] = Query(None, description="Besoins en soleil"),
+def get_recommendations_chat(sun_needs:Optional[str] = Query(None, description="Besoins en soleil"),
     water_needs: Optional[str] = Query(None, description="Besoins en eau"),
     maintenance: Optional[str] = Query(None, description="Niveau de maintenance"),
     soil: Optional[str] = Query(None, description="Type de sol"),

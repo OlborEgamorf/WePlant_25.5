@@ -15,6 +15,7 @@
     import AroVide from "$lib/assets/Arrosoire_totalvide.svg"
     import AroMid from "$lib/assets/Arrosoire_mi_vide.svg"
     import AroFull from "$lib/assets/Arrosoire_plein.svg"
+    import AroLil from "$lib/assets/Arrosoire_vide.svg"
 
     import GraphCalc from "$lib/assets/graphs.png"
     
@@ -42,8 +43,8 @@
     ]
 
     let soil:string = $state("loam")
-    let root:string = $state("profondes")
-    let pot:string = $state("M")
+    let root:string = $state("superficielles")
+    let pot:string = $state("XL")
 
     let minMoisture:number = 0
     let maxMoisture:number = 50
@@ -90,10 +91,21 @@
         else return `transition-all w-[150px] absolute -bottom-25 left-29 z-${z}`
     }
 
-    function setRootsClass(root:string) {
-        if (root == "superficielles") return "transition-all w-[67px] absolute -top-9 left-39.5 z-2"
-        else if (root == "moyennes") return "transition-all w-[67px] absolute -top-6 left-39.5 z-2"
-        else return "transition-all w-[67px] absolute -top-0 left-39.5 z-2"
+    function setRootsClass(root:string, pot:string) {
+        if (pot == "M") {
+            if (root == "superficielles") return "transition-all w-[67px] absolute -top-9 left-39.5 z-2"
+            else if (root == "moyennes") return "transition-all w-[67px] absolute -top-6 left-39.5 z-2"
+            else return "transition-all w-[67px] absolute -top-0 left-39.5 z-2"
+        } else if (pot == "L") {
+            if (root == "superficielles") return "transition-all w-[67px] absolute -top-15 left-39.5 z-2"
+            else if (root == "moyennes") return "transition-all w-[67px] absolute -top-12 left-39.5 z-2"
+            else return "transition-all w-[67px] absolute -top-6 left-39.5 z-2"
+        } else if (pot == "XL") {
+            if (root == "superficielles") return "transition-all w-[67px] absolute -top-21 left-39.5 z-2"
+            else if (root == "moyennes") return "transition-all w-[67px] absolute -top-18 left-39.5 z-2"
+            else return "transition-all w-[67px] absolute -top-12 left-39.5 z-2"
+        }
+        
     }
 
     // function setRootsClass(root:string, pot:string):string {
@@ -122,19 +134,24 @@
 
     function setArosoirSrc(volume:number) {
         if (volume == 0) return AroVide
+        else if (volume < 0.3) return AroLil
         else if (volume < 1) return AroMid
         else return AroFull
     }
 
-    function setArosoirClass(volume:number):string {
-        if (volume == 0) return "transition-all w-[100px] absolute top-8.25 left-60 z-5"
+    function setArosoirClass(volume:number, pot:string):string {
+        if (volume == 0) return "transition-all w-[100px] absolute top-8.25 left-62 z-5"
+        else if (volume > 2 && pot != "XL") return "transition-all w-[120px] absolute -top-25 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
+        else if (volume > 2 && pot == "XL") return "transition-all w-[120px] absolute -top-35 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
+        else if (pot == "L") return "transition-all w-[100px] absolute -top-27 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
+        else if (pot == "XL") return  "transition-all w-[100px] absolute -top-33 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
         else return "transition-all w-[100px] absolute -top-20 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
     }
 
     function setTopBloc(pot:string) {
         if (pot == "M") return "transition-all absolute -top-37.25 z-4"
-        else if (pot == "L") return "transition-all absolute -top-42.5 z-4"
-        else return "transition-all absolute -top-50 z-4"
+        else if (pot == "L") return "transition-all absolute -top-42.75 z-4"
+        else return "transition-all absolute -top-49 z-4"
     }
 
     function setTreeClass(pot:string) {
@@ -194,11 +211,11 @@
         <img src={Pot} class={setPotClass(pot, 5)} alt="">
 
         <img src={setSoilSrc(soil)} class={setPotClass(pot, 2)} alt="">
-        <img src={Roots} class={setRootsClass(root)} alt="">
+        <img src={Roots} class={setRootsClass(root, pot)} alt="">
 
         <img src={Tree} class={setTreeClass(pot)} alt="">
         
-        <img src={setArosoirSrc(dataAPI.volume_a_arroser)} class={setArosoirClass(dataAPI.volume_a_arroser)} alt="">
+        <img src={setArosoirSrc(dataAPI.volume_a_arroser)} class={setArosoirClass(dataAPI.volume_a_arroser, pot)} alt="">
 
     </div>
 
