@@ -12,7 +12,7 @@
 <img src={bambou} class="w-auto h-70 fixed bottom-0 left-0" alt="fleur" />
 
 
-<div class="bg-[#EBDC94] min-h-screen text-zinc-700">
+<div class="bg-[#EBDC94] min-h-screen text-zinc-700 font-[FuturaRener]">
 
     <Tabs.Root value="calc" class="pt-10 z-7">
         <Tabs.List class="grid mx-100 grid-cols-4">

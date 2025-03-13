@@ -116,7 +116,7 @@
     <div class="col-start-1">
         <div class="w-[450px]">
             <div class="mb-5">
-                <div class="font-bold text-xl">Recommandation</div>
+                <div class="font-bold text-xl text-justify">Recommandation</div>
                 <div>Découvrez nos recommandations personnalisées de 5 plantes pour sublimer vos bureaux selon vos critères !</div>
             </div>
         
@@ -203,8 +203,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-5 row-start-3 text-lg text-zinc-700 pb-10 {i.toString() != recomID ? 'hidden' : ''}">
-                        <div class="text-sm">{plant.Desc}</div>
+                    <div class="col-span-5 row-start-3 text-justify  text-zinc-700 pb-10 {i.toString() != recomID ? 'hidden' : ''}">
+                        <div class="text-base">{plant.Desc}</div>
                     </div>  
                 {/each}
             </div>
