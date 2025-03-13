@@ -173,7 +173,7 @@
         {/if}
         
         <div class="w-full mx-10">
-            <div class="grid grid-cols-5 gap-x-4 gap-y-10 ">
+            <div class="grid grid-cols-5 gap-x-4 gap-y-10 text-zinc-700 ">
                 {#each dataAPI.recommendations as plant, i}
                     <!-- svelte-ignore a11y_click_events_have_key_events -->
                     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -185,10 +185,10 @@
                       </Tooltip.Root>
                 {/each}    
                 
-                <div class="col-span-3 w-60 h-60 bg-red-500 row-start-2 rounded-md"></div>
+                <div class="col-span-3 w-60 h-60 bg-red-500 row-start-2 rounded-md text-zinc-700"></div>
                 {#each dataAPI.recommendations as plant, i}
 
-                    <div class="col-span-2 row-start-2 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
+                    <div class="col-span-2 row-start-2 text-lg text-zinc-700 {i.toString() != recomID ? 'hidden' : ''}">
                         <div class="mb-3">
                             <p class="font-bold">{getPlantName(plant.Name)}</p>
                             <div class="font-semibold text-sm mt-2">Caractéristiques:</div>
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-5 row-start-3 text-lg text-black {i.toString() != recomID ? 'hidden' : ''}">
+                    <div class="col-span-5 row-start-3 text-lg text-zinc-700 pb-10 {i.toString() != recomID ? 'hidden' : ''}">
                         <div class="text-sm">{plant.Desc}</div>
                     </div>  
                 {/each}

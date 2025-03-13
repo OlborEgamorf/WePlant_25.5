@@ -15,8 +15,8 @@
 	{...$$restProps}
 	let:thumbs
 >
-	<span class="bg-secondary relative h-2 w-full grow overflow-hidden rounded-full">
-		<SliderPrimitive.Range class="bg-primary absolute h-full" />
+	<span class="bg-secondary  relative h-2 w-full grow overflow-hidden rounded-full">
+		<SliderPrimitive.Range class="bg-primary bg-zinc-700 absolute h-full" />
 	</span>
 	{#each thumbs as thumb}
 		<SliderPrimitive.Thumb

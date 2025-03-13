@@ -262,6 +262,7 @@ async def predict(
 
 
 SELECTED_COLUMNS = [
+    "id",
     "Name", 
     "Desc",
     "SunNeeds", 

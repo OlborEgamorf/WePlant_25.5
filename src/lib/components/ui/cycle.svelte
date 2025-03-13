@@ -153,7 +153,7 @@
         <img src={setSoilSrc(soil)} class={setPotClass(pot, 6)} alt="">
         
         <svg class="absolute -top-37 z-4">
-            <rect stroke="#ACE1AF" fill="#ACE1AF" height="200" width="200"></rect>
+            <rect stroke="#EBDC94" fill="#EBDC94" height="200" width="200"></rect>
         </svg>
 
         <img src={Tree} class="w-[200px] absolute -top-46 left-0 z-5" alt="">

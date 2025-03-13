@@ -7,9 +7,9 @@
 <ToggleGroup.Root type="single" bind:value={selected} class="justify-start">
     {#each params as param, i}
         <ToggleGroup.Item 
-            class="border-2 bg-lime-50 border-gray-950 
-                {param.value != selected ? 'cursor-pointer' : '!bg-green-600 !text-white'} 
-                hover:bg-lime-100 " 
+            class="border-2 bg-[#DED08C] border-[#DED08C] 
+                {param.value != selected ? 'cursor-pointer' : '!bg-[#ABAA6C] !text-white'} 
+                hover:bg-[#D1C484] hover:text-white " 
             value={param.value} 
             aria-label={param.label}>
             
