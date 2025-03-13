@@ -56,6 +56,22 @@ ggplot(df, aes(x = Growth_Milestone, y = Humidity, fill = Growth_Milestone)) +
   theme_minimal()
 
 ```
+```{r}
+# Comparaison du taux de croissance en fonction du type de fertilisant
+graph <- ggplot(df, aes(x = Fertilizer_Type, fill = Growth_Milestone)) + 
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Effet du Fertilisant sur la Croissance",
+    x = "Type de Fertilisant",  # Changer le label de l'axe X
+    fill = "Étapes de Croissance"  # Changer le label de la légende
+  )
+
+graph
+# Sauvegarde du graphique dans un fichier PNG
+ggsave("graphique_croissance.png", plot = graph, width = 8, height = 6, dpi = 300)
+
+```
+
 
 ```{r}
 ggplot(df, aes(x = Temperature, y = Humidity, color = Growth_Milestone)) +
@@ -90,7 +106,9 @@ chisq.test(df$Water_Frequency, df$Growth_Milestone)
 # Test du Chi-2 pour Fertilizer_Type
 chisq.test(df$Fertilizer_Type, df$Growth_Milestone)
 ```
+ Effet du type de fertilisant sur la croissance :
 
+    X² = 21.87, p < 0.0001 ⏩ Très significatif ! Le type de fertilisant a un impact majeur sur la croissance des plantes.
 
 ## Modèle avec Fertile
 
@@ -98,10 +116,10 @@ chisq.test(df$Fertilizer_Type, df$Growth_Milestone)
 set.seed(123)
 
 # Modèle de régression logistique
-model_full <- glm(Growth_Milestone ~ Sunlight_Hours*Humidity*Temperature*Soil_Type*Water_Frequency+Fertilizer_Type, data = df, family = binomial())
+model_full <- glm(Growth_Milestone ~ Sunlight_Hours+Humidity+Temperature+Soil_Type+Water_Frequency+Fertilizer_Type, data = df, family = binomial())
 
 # Résumé du modèle
-#summary(model_full)
+summary(model_full)
 
 cor(df[, sapply(df, is.numeric)])
 alias(model_full)
@@ -143,7 +161,7 @@ set.seed(123)
 model_full <- glm(Growth_Milestone ~ Sunlight_Hours+Humidity+Soil_Type+Temperature+Water_Frequency, data = df, family = binomial())
 
 # Résumé du modèle
-#summary(model_full)
+summary(model_full)
 
 vif(model_full)
 
