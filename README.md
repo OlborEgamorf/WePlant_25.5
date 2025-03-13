@@ -31,6 +31,25 @@ npm run dev
 
 Bibliothèque des composants pour importer de nouveaux éléments : https://www.shadcn-svelte.com/
 
+## Lancement API
+
+L'API est codée en Python avec Fastapi.
+
+Lors de la première utilisation, installer tous les packages avec pip :
+
+```bash
+pip install -r requirements.txt
+```
+
+Ensuite, lancer l'API avec Fastapi :
+
+```
+fastapi dev ./api/main.py
+```
+
+Pensez à ajouter une clé OpenAI dans un fichier `.env` pour accéder à la route qui intègre ChatGPT.
+
+
 ## Règles de contributions
 
 Ce projet étant court et à 6, il n'y a pas de temps à perdre dans la gestion de Git et de la lisibilité du code. Voici les règles à respecter quand vous écrivez du code et que vous le publiez ici :
