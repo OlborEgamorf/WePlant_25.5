@@ -117,7 +117,7 @@
         <div class="w-[450px]">
             <div class="mb-5">
                 <div class="font-bold text-xl">Recommandation</div>
-                <div>Notre système vous recommandera 5 plantes correspondants à vos envies ...</div>
+                <div>Découvrez nos recommandations personnalisées de 5 plantes pour sublimer vos bureaux selon vos critères !</div>
             </div>
         
             <div class="mb-3">
