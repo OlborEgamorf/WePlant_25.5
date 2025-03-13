@@ -30,10 +30,14 @@
     import arbustes from "$lib/assets/treeRec.svg";
     import vivaces from "$lib/assets/vivaces.svg";
 
+    import Bot from "$lib/assets/botChat.svg"
+    import Flower from "$lib/assets/flowerChat.svg"
+
     import Input from "./input/input.svelte";
     import Selection from "./selection.svelte";
     import Separator from "./separator/separator.svelte";
     import Toggle from "./toggle.svelte";
+    import Loading from "./loading.svelte";
 
 
 
@@ -43,6 +47,10 @@
     let Maintenance:string = $state("Moyen")    
     let saison:Selected = $state({value:"Printemps", label:"Printemps",disabled:false})
     let categorie:Selected = $state({value:"Vivaces", label:"Vivaces",disabled:false})
+
+    // svelte-ignore state_referenced_locally
+    let idOpen:string = ""
+    let loadOpen:boolean = $state(false)
 
     let minHeight:number = $state(20)
     let maxHeight:number = $state(60)
@@ -90,6 +98,7 @@
     ]
     
     let dataAPI:APIRecommandation = $state({recommendations:[], success:true, hasFailed:false, failed_criteria:[]})
+    let dataOpen:APIOpenAI = $state({nom:"", descip:"", caract:"", conseils:""})
 
     $effect(() => {
         soil;WaterNeed;SunNeed;Maintenance;saison;categorie;minHeight;maxHeight
@@ -100,16 +109,31 @@
 
     let recomID:string = $state("0")
 
+    $effect(() => {
+        dataAPI;
+        if (recomID == "chat") {
+            getChatGPT()
+        }
+    })
     function onclickRecom(this : HTMLElement) {
         recomID = this.id
     }
 
-    $effect(() => {
-        console.log(dataAPI)
-    })
-
     function getPlantName(name:string) {
         return name.split(" (")[0];
+    }
+
+    function getChatGPT() {
+        if (idOpen != soil+WaterNeed+SunNeed+Maintenance+saison.value+categorie.value && !loadOpen) {
+            idOpen = soil+WaterNeed+SunNeed+Maintenance+saison.value+categorie.value
+            loadOpen = true
+            fetch(`http://127.0.0.1:8000/recommend_chat?sun_needs=${SunNeed}&water_needs=${WaterNeed}&maintenance=${Maintenance}&soil=${soil}&season=${saison.value}&plant_category=${categorie.value}&min_height=${minHeight}&max_height=${maxHeight}`)
+            .then(response => response.json())
+            .then(data => {
+                dataOpen = JSON.parse(data.recommendations[0]); loadOpen = false; 
+            });
+        }
+        recomID = "chat"
     }
 
 </script>
@@ -156,6 +180,7 @@
                 </div>
             </div>
 
+            <!-- svelte-ignore a11y_label_has_associated_control -->
             <div class="mb-3">
                 <div class="mb-1 font-semibold">Taille (cm)</div>
                 <div class="flex">
@@ -169,28 +194,29 @@
                     <Input type="number"  min="0"  max="1000" step="1" bind:value={maxHeight} class="w-[100px]"/>
                   </div>
                 </div>
-              </div>
+            </div>
               
         </div>
     </div>
 
     <div class="col-start-2 flex flex-col items-start">
         {#if dataAPI.hasFailed}
-            <div class="text-white text-sm mt-2 m-5 bg-[#ABAA6C] p-2 rounded-md">
+            <div class="text-white text-sm mt-2 mx-10 m-5 bg-[#ABAA6C] p-2 rounded-md w-full">
                 <p>Attention, tous les filtres n'ont pas été appliqués !  {dataAPI.failed_criteria.join(', ')}</p>
             </div>
         {/if}
         
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div class="w-full mx-10">
-            <div class="grid grid-cols-5 gap-x-4 gap-y-5 text-zinc-700 ">
+            <div class="grid grid-cols-5 gap-x-4 gap-y-5 text-zinc-700">
                 {#each dataAPI.recommendations as plant, i}
-                    <!-- svelte-ignore a11y_click_events_have_key_events -->
-                    <!-- svelte-ignore a11y_no_static_element_interactions -->
+                    
                     <Tooltip.Root>
                         <Tooltip.Trigger>
                           <div
-                            class="w-full aspect-[1/1] h-20 bg-[#ABAA6C] rounded-md cursor-pointer {i.toString() === recomID ? 'border-4 border-[#ABAA6C]' : ''}" id={i.toString()} on:click={onclickRecom}>
-                            <img src="/src/lib/assets/flowers/{plant.id}.jpg" class="rounded-md w-full h-full object-cover"/>
+                            class="transition-all w-full aspect-[1/1] h-20 bg-[#ABAA6C] rounded-md cursor-pointer {i.toString() === recomID ? 'border-4 border-[#ABAA6C]' : ''}" id={i.toString()} onclick={onclickRecom}>
+                            <img src="/src/lib/assets/flowers/{plant.id}.jpg" class="rounded-md w-full h-full object-cover" alt=""/>
                           </div>
                         </Tooltip.Trigger>
                         <Tooltip.Content>
@@ -199,11 +225,24 @@
                       </Tooltip.Root>
                       
                 {/each}    
+                <Tooltip.Root>
+                    <Tooltip.Trigger>
+                        <div class="transition-all rounded-md w-full aspect-[1/1] h-20 bg-[#DED08C] relative {"chat" == recomID ? 'border-4 border-[#ABAA6C]' : ''}" id="chat" onclick={getChatGPT}>
+                            <img src={Bot} class="h-12 absolute top-4 left-3.25" alt=""/>
+                            <img src={Flower} class="h-15 absolute bottom-7 right-6 -rotate-35" alt=""/>
+                        </div>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                      <p>Proposition de ChatGPT</p>
+                    </Tooltip.Content>
+                  </Tooltip.Root>
                 
-                <div class="col-span-3 w-60 h-60 bg-[#ABAA6C] row-start-2 rounded-md text-zinc-700">
+                
+                <div class="col-span-3 w-60 h-60 bg-[#ABAA6C] row-start-2 rounded-md text-zinc-700 {'chat' == recomID ? 'hidden' : ''}">
                     {#each dataAPI.recommendations as plant, i}
-                        <img src="/src/lib/assets/flowers/{plant.id}.jpg" class="rounded-md w-full h-full object-cover {i.toString() != recomID ? 'hidden' : ''}">
+                        <img src="/src/lib/assets/flowers/{plant.id}.jpg" class="rounded-md w-full h-full object-cover {i.toString() != recomID ? 'hidden' : ''}" alt="">
                     {/each}
+                        
                 </div>
                 {#each dataAPI.recommendations as plant, i}
 
@@ -222,10 +261,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-5 row-start-3 text-justify  text-zinc-700 pb-2 {i.toString() != recomID ? 'hidden' : ''}">
+                    <div class="col-span-5 row-start-3 text-justify text-zinc-700 pb-2 {i.toString() != recomID ? 'hidden' : ''}">
                         <div class="text-base">{plant.Desc}</div>
                     </div>  
                 {/each}
+
+                <div class="col-span-5 row-start-2 col-start-1 text-justify text-zinc-700 pb-2 {"chat" != recomID ? 'hidden' : ''}">
+                    <Loading load={loadOpen} change={false}></Loading>
+                    {#if !loadOpen}
+                        <div class="-mt-[24px]">
+                            <div class="font-light italic mb-1">ChatGPT propose :</div>
+                            <div class="font-bold mb-2 text-lg">{dataOpen.nom}</div>
+                            <div class="mb-2">{dataOpen.descip}</div>
+                            <div class="mb-2"><span class="font-bold">Caractéristiques :</span> {dataOpen.caract}</div>
+                            <div class="mb-2"><span class="font-bold">Conseils d'entretien :</span> {dataOpen.conseils}</div>
+                        </div>
+                    {/if}
+                </div>
             </div>
         </div>
     </div>

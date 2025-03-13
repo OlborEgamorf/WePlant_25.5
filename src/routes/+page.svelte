@@ -23,20 +23,20 @@
             class="w-70 h-70 object-cover rounded-full"
           />
           <p class="font-[Indie_flower] text-center mt-4 text-lg">
-            " + 15 à 32 % de bien être au travail grâce aux espaces végétalisés" 
+            " + 15 à 32 % de bien être au travail<br>grâce aux espaces végétalisés" 
           </p>
         </div>
   
         <div>
-            <p class="text-md px-2 mr-60 font-[FuturaRener] text-justify text-lg">
-                Imaginez vous dans le sud de la France (le vrai) dans les Pyrénées-Orientales, l'air méditerranéen qui vous soulage des chaleurs de ce début d'été. Devant vous, de magnifiques fleurs grimpantes, parmi elles, vous remarquez <strong class="text-xl font-bold">des bougainvilliers</strong>.
+            <p class="text-md px-2 mr-60 text-justify text-lg mb-2">
+                Imaginez vous dans le sud de la France (le vrai), dans les Pyrénées-Orientales, l'air méditerranéen qui vous soulage des chaleurs de ce début d'été. Devant vous, de magnifiques fleurs grimpantes, parmi elles, vous remarquez <strong class="text-xl font-bold">des bougainvilliers</strong>.
               </p>
               
-              <p class="text-md px-2 mr-60 font-[FuturaRener] text-justify text-lg">
+              <p class="text-md px-2 mr-60  text-justify text-lg mb-2">
                 Cette couleur rose chatoyante vous parait irréelle dans un environnement si sec et violent que cette région, dans les périodes de <strong class="text-xl font-bold">pénuries</strong> et de <strong class="text-xl font-bold">sécheresse</strong>. Vous continuez de vous balader et vous remarquez que plus loin, en plein soleil, sur le flanc d’une maison loin de toute source d’eau potentielle, se tient un autre bougainvillier. Celui-ci est rachitique, presque <strong class="text-xl font-bold">fané</strong>, il tiendrait du miracle qu’il survive.
               </p>
               
-              <p class="text-md px-2 mr-60 font-[FuturaRener] text-justify text-lg">
+              <p class="text-md px-2 mr-60  text-justify text-lg">
                 Comment peut-il être si dégradé alors que son congénère vivant non loin de lui est au plus haut de sa forme ? De quoi a-t’il besoin pour renaître de ces cendres et revenir à un état de <strong class="text-xl font-bold">croissance</strong> et de bien-être ?
               </p>
               
@@ -44,8 +44,8 @@
       </div>
     </div>
   
-    <a href="/calculator" class="mt-20 px-4 py-2 bg-[#DED08C] rounded-md font-[FuturaRener] text-justify text-2xl">
-      Découvrez notre site !
+    <a href="/calculator" class="mt-8 px-4 py-2 bg-[#DED08C] rounded-md font-[Futura_Md_BT] text-justify text-xl">
+      Découvrez les réponses !
     </a>
   </div>
   

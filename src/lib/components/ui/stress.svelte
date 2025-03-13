@@ -81,7 +81,7 @@
         <div class="w-[300px]">
             <div class="mb-5">
                 <div class="font-bold text-xl">Paramètres obligatoires</div>
-                <div>Ces caractéristiques concernent la vie de la plante et de kjq...</div>
+                <div>L'humidité et la température sont primordiaux pour les calculs...</div>
             </div>
             
             <div class="mb-3">
@@ -98,7 +98,7 @@
 
             <div class="mb-5">
                 <div class="font-bold text-xl">Paramètres optionnels</div>
-                <div>Ces caractéristiques concernent la vie de la plante et de kjq...</div>
+                <div>...alors que le phosphore, le nitrogène et le potassium ont un impact différent.</div>
             </div>
 
             <div class="mb-3">

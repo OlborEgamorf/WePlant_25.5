@@ -5,7 +5,7 @@
 </script>
 
 <Select.Root portal={null} bind:selected={selected}>
-    <Select.Trigger class="w-[180px] border-[#DED08C] bg-[#DED08C] mx-1">
+    <Select.Trigger class="w-[180px] border-[#DED08C] bg-[#DED08C] mr-1">
         <Select.Value placeholder={placeholder} />
     </Select.Trigger>
     <Select.Content>

@@ -104,7 +104,7 @@
         <div class="w-[420px]">
             <div class="mb-5">
                 <div class="font-bold text-xl">Paramètres de l'environnement</div>
-                <div>Ces caractéristiques concernent la vie de la plante et de kjq...</div>
+                <div>L'environnement donné va pouvoir déterminer si la plante poussera ou non.</div>
             </div>
         
             <div class="mb-3">
@@ -177,7 +177,7 @@
     <div class="col-start-1 col-span-2 row-start-4 text-justify">
         <div class="text-2xl font-bold mb-3">Introduction</div>
         <div>
-            Revenons dans le sud de la France avec nos deux amis les bougainvilliers.  L’un est splendide, couvert de fleurs colorées, tandis que l’autre semble fragile, ses feuilles sont fanées et ses branches éparpillées. Pourquoi une telle différence ? La réponse se trouve dans le cycle de vie des plantes et les conditions dont elles ont besoin pour s’épanouir.
+            Revenons dans le sud de la France avec nos deux amis les bougainvilliers.  L’un est splendide, couvert de fleurs colorées, tandis que l’autre semble fragile, ses feuilles sont fanées et ses branches éparpillées. <span class="font-bold">Pourquoi une telle différence ?</span> La réponse se trouve dans le cycle de vie des plantes et les conditions dont elles ont besoin pour s’épanouir.
             
             <br><br>
 
@@ -193,9 +193,9 @@
         <div class="text-2xl font-bold mb-3 mt-5">Les secrets d’un bougainvillier épanoui : adapter son environnement pour réussir</div>
 
         <div>
-            Dans notre jardin, le bougainvillier en difficulté n’a pas toutes ces bonnes conditions. Son sol ne garde pas assez d’humidité, le soleil brûle la plante, et il y a un manque de ressources pour la croissance de la plante. 
+            Dans notre jardin, le <span class="font-bold">bougainvillier</span> en difficulté n’a pas toutes ces bonnes conditions. Son sol ne garde pas assez d’humidité, le soleil brûle la plante, et il y a un manque de ressources pour la croissance de la plante. 
             <br><br>
-            Comprendre ces étapes et ces besoins permet d’expliquer pourquoi certaines plantes s’épanouissent mieux que d’autres. En ajustant les conditions de croissance, comme l’arrosage, l’exposition au soleil, le type de sol ou en ajustant la température et l’humidité. Il est possible de créer un environnement optimal pour les plantes. 
+            Comprendre ces étapes permet d’expliquer pourquoi certaines plantes s’épanouissent mieux que d’autres. En ajustant les conditions de croissance, comme <span class="font-bold">l’arrosage</span>, <span class="font-bold">l’exposition au soleil</span>, <span class="font-bold">le type de sol</span> ou en ajustant la <span class="font-bold">température</span> et <span class="font-bold">l’humidité</span>. Il est possible de créer un environnement optimal pour les plantes. 
         </div>
 
         <div class="text-2xl font-bold mb-3 mt-5">Utilisation de l’outil : Prédiction de croissance</div>

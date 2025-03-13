@@ -7,6 +7,7 @@ import joblib
 import numpy as np
 from enum import Enum
 from typing import Optional
+import openai
 
 app = FastAPI()
 
@@ -341,8 +342,8 @@ def get_recommendations(
     if maxHeight is not None:
         filtered_data = filtered_data[filtered_data["max_height_cm"] <= maxHeight]
     
-    result_count = min(5, len(filtered_data))
-    final_data = filtered_data[SELECTED_COLUMNS].head(result_count) if not filtered_data.empty else plant_data[SELECTED_COLUMNS].head(5)
+    result_count = min(4, len(filtered_data))
+    final_data = filtered_data[SELECTED_COLUMNS].head(result_count) if not filtered_data.empty else plant_data[SELECTED_COLUMNS].head(4)
     
     return {
         "recommendations": df_to_dict(final_data),
@@ -350,3 +351,50 @@ def get_recommendations(
         "failed_criteria": failed_criteria,
         "hasFailed": len(failed_criteria) > 0
     }
+
+openai.api_key =  ""
+@app.get("/recommend_chat")
+def get_recommendations(sun_needs:Optional[str] = Query(None, description="Besoins en soleil"),
+    water_needs: Optional[str] = Query(None, description="Besoins en eau"),
+    maintenance: Optional[str] = Query(None, description="Niveau de maintenance"),
+    soil: Optional[str] = Query(None, description="Type de sol"),
+    season: Optional[str] = Query(None, description="Saison de croissance"),
+    plant_category: Optional[str] = Query(None, description="Catégories de plantes"),
+    minHeight: Optional[float] = Query(None, description="Hauteur minimale en cm"),
+    maxHeight: Optional[float] = Query(None, description="Hauteur maximale en cm")):
+
+    prompt = f"""
+    Je recherche une plante qui correspond aux critères suivants :
+    - Exposition : {sun_needs}
+    - Type de sol : {soil}
+    - Besoin en eau : {water_needs}
+    - Maintenance : {maintenance}
+    - Saison : {season}
+    - Catégorie : {plant_category}
+    - Taille : entre {minHeight} cm et {maxHeight} cm
+
+    Peux-tu recommander une plante adaptée en me donnant ces 4 informations sous ce format JSON :
+    {{
+        "nom": "Nom de la plante",
+        "descip": "Une description détaillée de la plante.",
+        "caract": "Les principales caractéristiques de la plante.",
+        "conseils": "Les conseils pour entretenir cette plante."
+    }}
+
+    Réponds uniquement avec un JSON valide sans autre texte autour.
+    """
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "Tu es un expert en botanique et jardinage."},
+                      {"role": "user", "content": prompt}],
+            temperature=0.7
+        )
+        response_gpt = response["choices"][0]["message"]["content"]
+    except Exception as e:
+        response_gpt = f"Erreur lors de la requête OpenAI : {str(e)}"
+    
+    # response_gpt = generate_plant_recommendation(user_prefs)
+
+    return {"recommendations": [response_gpt], "source": "GPT-4"}

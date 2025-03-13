@@ -10,6 +10,7 @@ type Selected = {
 }
 
 type Plant = {
+    id:string,
     Name: string;
     Desc: string;
     SunNeeds: string;
@@ -55,4 +56,11 @@ type APIEntretien = {
     humidite_mm:number,
     volume_a_arroser:number,
     besoin_arrosage:string
+}
+
+type APIOpenAI = {
+    nom:string,
+    descip:string,
+    caract:string,
+    conseils:string
 }

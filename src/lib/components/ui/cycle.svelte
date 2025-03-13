@@ -12,6 +12,10 @@
     import SandIcon from "$lib/assets/sable.svg";
     import LoamIcon from "$lib/assets/terre.svg";
 
+    import AroVide from "$lib/assets/Arrosoire_totalvide.svg"
+    import AroMid from "$lib/assets/Arrosoire_mi_vide.svg"
+    import AroFull from "$lib/assets/Arrosoire_plein.svg"
+
     import GraphCalc from "$lib/assets/graphs.png"
     
     import Separator from "./separator/separator.svelte";
@@ -65,7 +69,7 @@
         })
     })
 
-    let dataAPI:APIEntretien = $state({})
+    let dataAPI:APIEntretien = $state({volume_a_arroser:0})
 
     $effect(() => {
         soil;root;pot;moisture
@@ -76,22 +80,33 @@
     })
 
     $effect(() => {
-        console.log(dataAPI)
         dataAPI;
         load = false;
     })
 
     function setPotClass(pot:string, z:number) {
-        if (pot == "M") return `transition-all w-[150px] absolute top-0 left-6 z-${z}`
-        else if (pot == "L") return `transition-all w-[175px] absolute top-0 left-3 z-${z}`
-        else return `transition-all w-[200px] absolute top-0 left-0 z-${z}`
+        if (pot == "M") return `transition-all w-[100px] absolute -bottom-25 left-35 z-${z}`
+        else if (pot == "L") return `transition-all w-[125px] absolute -bottom-25 left-32 z-${z}`
+        else return `transition-all w-[150px] absolute -bottom-25 left-29 z-${z}`
     }
 
     function setRootsClass(root:string) {
-        if (root == "superficielles") return "transition-all w-[67px] absolute -top-9 left-16.5 z-3"
-        else if (root == "moyennes") return "transition-all w-[67px] absolute -top-6 left-16.5 z-3"
-        else return "transition-all w-[67px] absolute -top-0 left-16.5 z-3"
+        if (root == "superficielles") return "transition-all w-[67px] absolute -top-9 left-39.5 z-2"
+        else if (root == "moyennes") return "transition-all w-[67px] absolute -top-6 left-39.5 z-2"
+        else return "transition-all w-[67px] absolute -top-0 left-39.5 z-2"
     }
+
+    // function setRootsClass(root:string, pot:string):string {
+    //     let top:number = 0
+
+    //     if (root == "superficielles") top += 9
+    //     else if (root == "moyennes") top += 6
+        
+    //     if (pot == "L") top += 5
+    //     else if (pot == "XL") top += 10
+
+    //     return `transition-all w-[67px] absolute -top-${top} left-39.5 z-2`
+    // }
 
     function setSoilSrc(soil:string) {
         if (soil == "loam") return PotLoam
@@ -103,6 +118,29 @@
         if (soil == "loam") return PotLoamTop
         else if (soil == "sand") return PotSandTop
         else return PotClayTop
+    }
+
+    function setArosoirSrc(volume:number) {
+        if (volume == 0) return AroVide
+        else if (volume < 1) return AroMid
+        else return AroFull
+    }
+
+    function setArosoirClass(volume:number):string {
+        if (volume == 0) return "transition-all w-[100px] absolute top-8.25 left-60 z-5"
+        else return "transition-all w-[100px] absolute -top-20 left-60 -rotate-30 z-5 animate-wiggle animate-infinite animate-duration-[3500ms] animate-ease-out animate-normal"
+    }
+
+    function setTopBloc(pot:string) {
+        if (pot == "M") return "transition-all absolute -top-37.25 z-4"
+        else if (pot == "L") return "transition-all absolute -top-42.5 z-4"
+        else return "transition-all absolute -top-50 z-4"
+    }
+
+    function setTreeClass(pot:string) {
+        if (pot == "M") return "transition-all w-[200px] absolute -top-47.25 left-23 z-4"
+        else if (pot == "L") return "transition-all w-[200px] absolute -top-53 left-23 z-4"
+        else return "transition-all w-[200px] absolute -top-59.25 left-23 z-4"
     }
 
 </script>
@@ -147,25 +185,27 @@
 
     <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
 
-        <img src={setSoilTopSrc(soil)} class={setPotClass(pot, 6)}  alt="">
-
-        <img src={Pot} class={setPotClass(pot, 6)} alt="">
-
-        <img src={setSoilSrc(soil)} class={setPotClass(pot, 6)} alt="">
-        
-        <svg class="absolute -top-37 z-4">
-            <rect stroke="#EBDC94" fill="#EBDC94" height="200" width="200"></rect>
+        <svg class={setTopBloc(pot)}>
+            <rect stroke="#EBDC94" fill="#EBDC94" height="200" width="400"></rect>
         </svg>
 
-        <img src={Tree} class="w-[200px] absolute -top-46 left-0 z-5" alt="">
+        <img src={setSoilTopSrc(soil)} class={setPotClass(pot, 2)}  alt="">
+
+        <img src={Pot} class={setPotClass(pot, 5)} alt="">
+
+        <img src={setSoilSrc(soil)} class={setPotClass(pot, 2)} alt="">
         <img src={Roots} class={setRootsClass(root)} alt="">
+
+        <img src={Tree} class={setTreeClass(pot)} alt="">
+        
+        <img src={setArosoirSrc(dataAPI.volume_a_arroser)} class={setArosoirClass(dataAPI.volume_a_arroser)} alt="">
 
     </div>
 
     <div class="col-start-2 row-start-2 text-start mb-[44px]">
         {#if dataAPI.volume_a_arroser != 0}
             <div class="text-xl font-semibold">Arrosez !</div>
-            {dataAPI.volume_a_arroser} litres est le volume optimal pour arroser votre plante. 
+            {dataAPI.volume_a_arroser} litres d'eau est le volume optimal pour arroser votre plante. 
         {:else}
             <div class="text-xl font-semibold">Pas besoin d'aroser !</div>
             Votre plante a un niveau d'eau déjà suffisant.

@@ -15,7 +15,7 @@
 <img src={bambou} class="w-auto h-70 fixed bottom-0 left-0" alt="fleur" />
 
 
-<div class="bg-[#EBDC94] min-h-screen text-zinc-700 font-[FuturaRener]">
+<div class="bg-[#EBDC94] min-h-screen text-zinc-700">
     <a href="/" class="fixed top-1 left-1">
         <img src={home} class="w-10 h-10 cursor-pointer" alt="home" />
     </a>
