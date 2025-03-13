@@ -20,19 +20,20 @@ app.add_middleware(
 data = {
     "Sol": ["Sableux", "Limoneux", "Argileux"],
     "θopt_racinaires_profonds": [13.0, 20.5, 33.0],
-    "θopt_racinaires_profonds_min": [12.5, 20.0, 32.5],
-    "θopt_racinaires_profonds_max": [13.5, 21.0, 33.5],
     "θopt_racinaires_moyens": [14.0, 23.5, 38.0],
     "θopt_racinaires_superficiels": [5.9, 11.4, 22.9],
-    "θopt_racinaires_superficiels_min": [5.0, 10.5, 22.0],
-    "θopt_racinaires_superficiels_max": [6.8, 12.3, 23.8]
+    "θwp": [5.0, 10.0, 20.0],
+    "humidite_flet": [5.0, 12.0, 27.0],
+    "humidite_racinaires_profonds": [20.8, 28.7, 39.6],
+    "humidite_racinaires_moyens": [22.4, 32.9, 45.6],
+    "humidite_racinaires_superficiels": [9.44, 15.96, 27.48]
 }
 
 # Définition des types de racines
 types_racine_mapping = {
-    "profonds": ["θopt_racinaires_profonds", "θopt_racinaires_profonds_min", "θopt_racinaires_profonds_max"],
-    "moyens": ["θopt_racinaires_moyens"],
-    "superficiels": ["θopt_racinaires_superficiels", "θopt_racinaires_superficiels_min", "θopt_racinaires_superficiels_max"]
+    "profondes": ["θopt_racinaires_profonds","humidite_racinaires_profonds"],
+    "moyennes": ["θopt_racinaires_moyens","humidite_racinaires_moyens"],
+    "superficielles": ["θopt_racinaires_superficiels", "humidite_racinaires_superficiels"]
 }
 
 # Densité apparente des sols (en g/cm³)
@@ -44,7 +45,13 @@ densite_apparente = {
 
 # Profondeur des pots en dm
 profondeur_pots = {
-    "M": 2.5,
+    "M": 2,
+    "L": 4,
+    "XL": 6
+}
+
+diametre_pots = {
+    "M": 2,
     "L": 4,
     "XL": 6
 }
@@ -58,9 +65,9 @@ async def root():
 @app.get("/parametres_sol/")
 async def get_sol_parameters(
     sol: str = Query(..., description="Type de sol: Sableux, Limoneux, Argileux"),
-    racine: str = Query(..., description="Type de racine: Profonds, Moyens, Superficiels"),
+    racine: str = Query(..., description="Type de racines: Profondes, Moyennes, Superficielles"),
     taille_pot: str = Query("M", description="Taille du pot: M, L, XL"),
-    humidity: float = Query(..., description="Humidité actuelle du sol en mm")
+    humidity: float = Query(..., description="Humidité actuelle du sol en %")
 ):
     """
     Récupère les paramètres d'un sol et d'un type de racine,
@@ -79,7 +86,7 @@ async def get_sol_parameters(
         raise HTTPException(status_code=400, detail=f"Type de racine invalide. Choisissez parmi: {', '.join(types_racine_mapping.keys())}")
 
     # Vérification de la taille du pot
-    if taille_pot not in profondeur_pots:
+    if taille_pot not in profondeur_pots and taille_pot not in diametre_pots:
         raise HTTPException(status_code=400, detail=f"Taille de pot invalide. Choisissez parmi: {', '.join(profondeur_pots.keys())}")
 
     # Sélection des colonnes correspondant au type de racine
@@ -88,27 +95,56 @@ async def get_sol_parameters(
     # Récupération de la valeur θopt correspondant à la racine choisie
     θopt = filtered_df[types_racine_mapping[racine][0]].values[0]  # Prend la valeur moyenne
 
+    # Récupération de la valeur θflet correspondant au sol choisi
+    index_sol = data["Sol"].index(sol)
+    θflet = data["θwp"][index_sol]
+    humidite_cible = filtered_df[types_racine_mapping[racine][1]].values[0]  # Prend la valeur moyenne
+    humidite_flet = data["humidite_flet"][index_sol]
+
     # Récupération de la densité apparente du sol
     da = densite_apparente[sol]
 
     # Récupération de la profondeur du pot en dm
     z = profondeur_pots[taille_pot]
+    d = diametre_pots[taille_pot]
+
+    da_echantillon = da + humidity * da/100
+    da_cible = da + humidite_cible * da/100
+    da_flet = da + humidite_flet * da/100
 
     # Calcul de la Réserve Utile (RU en mm)
-    RU = θopt * da * z
-
+    RU_obs = (((θopt/100)*da_echantillon - (θflet/100)*da_flet)/da)*100  * da * z
+    RU_cible = (((θopt/100)*da_cible - (θflet/100)*da_flet)/da)*100  * da * z
     # Vérification du besoin d’arrosage
-    besoin_arrosage = "Il faut arroser" if humidity < RU else "Pas besoin d'arroser"
+
+    surface = 3.14 * d *100
+
+    vol_eau_cm3_obs = RU_obs/10 * surface
+    vol_eau_l_obs = vol_eau_cm3_obs/1000
+
+    vol_eau_cm3_cible = RU_cible/10 * surface
+    vol_eau_l_cible = vol_eau_cm3_cible/1000
+
+    if vol_eau_l_obs < vol_eau_l_cible:
+       volume_a_arroser = round(vol_eau_l_cible - vol_eau_l_obs,2)
+    else:
+       volume_a_arroser = 0
+    
+    besoin_arrosage = ("Il faut arroser de "+ str(volume_a_arroser) + " Litres") if volume_a_arroser>0 else "Pas besoin d'arroser"
 
     return {
         "sol": sol,
         "type_racine": racine,
         "taille_pot": taille_pot,
         "θopt": θopt,
+        "θflet": θflet,
+        "Humidité flet": humidite_flet,
+        "RU_obs": round(RU_obs, 2),
+        "RU_cible": round(RU_cible, 2),
         "densite_apparente": da,
         "profondeur_pot_dm": z,
-        "RU_mm": round(RU, 2),
         "humidite_mm": humidity,
+        "volume_a_arroser": round(volume_a_arroser,2),
         "besoin_arrosage": besoin_arrosage
     }
 
