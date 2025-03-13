@@ -40,3 +40,19 @@ type APIStress = {
 type APIPredict = {
     prediction:number
 }
+
+type APIEntretien = {
+    sol:string,
+    type_racine:string,
+    taille_pot:string,
+    θopt:number,
+    θflet:number,
+    Humidite_flet:number,
+    RU_obs:number,
+    RU_cible:number,
+    densite_apparente:number
+    profondeur_pot_dm:number,
+    humidite_mm:number,
+    volume_a_arroser:number,
+    besoin_arrosage:string
+}

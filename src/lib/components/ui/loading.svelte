@@ -14,4 +14,7 @@
         <LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
         Chargement des données...
     </div>
+
+{:else}
+    <div class="flex h-[24px]"></div>
 {/if}

@@ -141,7 +141,7 @@ async def get_sol_parameters(
         "taille_pot": taille_pot,
         "θopt": θopt,
         "θflet": θflet,
-        "Humidité flet": humidite_flet,
+        "Humidite_flet": humidite_flet,
         "RU_obs": round(RU_obs, 2),
         "RU_cible": round(RU_cible, 2),
         "densite_apparente": da,

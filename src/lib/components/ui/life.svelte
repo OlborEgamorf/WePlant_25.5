@@ -71,7 +71,7 @@
     })
 
     let dataAPI:APIPredict = $state({prediction:0})
-    let predi:number = -1
+    let predi:number = $state(-1)
 
     // 0 : neutral à bon
     // 1 : neutral à mauvais
@@ -97,30 +97,13 @@
         load = false
     })
 
-    function setAnimBad(stateAnim:number) {
-        if (stateAnim == 0) return "hidden"
-        if (stateAnim == 1 || stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal'
-        if (stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
-    }
-
-    function setAnimNeutral(stateAnim:number ) {
-        if (stateAnim == 0 || stateAnim == 1) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
-        else return  "hidden"
-    }
-
-    function setAnimGood(stateAnim:number) {
-        if (stateAnim == 1) return "hidden"
-        if (stateAnim == 0 || stateAnim == 3) return 'animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal'
-        if (stateAnim == 2) return 'animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse'
-    }
-
 </script>
 
-<div class="grid mx-10 my-5 lg:mx-75 items-center grid-cols-2 gap-x-10">
-    <div class="col-start-1">
+<div class="grid mx-10 my-10 lg:mx-75 items-center grid-cols-2 gap-x-10">
+    <div class="col-start-1 row-start-1 row-span-2">
         <div class="w-[420px]">
             <div class="mb-5">
-                <div class="font-bold text-xl">Caractéristiques de la plante</div>
+                <div class="font-bold text-xl">Paramètres de l'environnement</div>
                 <div>Ces caractéristiques concernent la vie de la plante et de kjq...</div>
             </div>
         
@@ -129,11 +112,6 @@
                 <Toggle bind:selected={soil} params={soils} image={[LoamIcon,ClayIcon,SandIcon]}></Toggle>
                 <!-- <Selection params={soils} placeholder={"Choisir un sol"}></Selection> -->
             </div> 
-            
-            <div class="mb-5 mt-5">
-                <div class="font-bold text-xl">Paramètres environnementaux</div>
-                <div>L'environnement correspond aux conditions de vie de la plante...</div>
-            </div>
         
             <div class="mb-3">
                 <div class="mb-2 font-semibold">Humidité - {moistureTemp}</div>
@@ -161,30 +139,78 @@
         </div>
     </div>
 
-    <div class="col-start-2 row-start-1 row-span-2">
-        <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
+    <div class="col-start-2 row-start-1 row-span-2 relative transition-all">
             
-            {#if stateAnim == -1}
-                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5" alt="">
-            {:else if stateAnim == 0}
-                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
-            {:else if stateAnim == 1}
-                <img src={Grow3} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
-            {:else if stateAnim == 2}
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
-            {:else if stateAnim == 3}
-                <img src={Grow1} class="transition-all w-[300px] absolute -top-20 left-15 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
-                <img src={Grow4} class="transition-all w-[300px] absolute -top-61 left-15.5 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
-            {/if}           
 
-        </div>
+        {#if stateAnim == -1}
+            <img src={Grow3} class="transition-all w-[200px] absolute -top-31 left-27 z-5" alt="">
+        {:else if stateAnim == 0}
+            <img src={Grow3} class="transition-all w-[200px] absolute -top-31 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+            <img src={Grow4} class="transition-all w-[200px] absolute -top-58.5 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
+        {:else if stateAnim == 1}
+            <img src={Grow3} class="transition-all w-[200px] absolute -top-31 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+            <img src={Grow1} class="transition-all w-[200px] absolute -top-31 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
+        {:else if stateAnim == 2}
+            <img src={Grow4} class="transition-all w-[200px] absolute -top-58.5 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+            <img src={Grow1} class="transition-all w-[200px] absolute -top-31 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
+        {:else if stateAnim == 3}
+            <img src={Grow1} class="transition-all w-[200px] absolute -top-31 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-250 animate-reverse" alt="">
+            <img src={Grow4} class="transition-all w-[200px] absolute -top-58.5 left-27 z-5 animate-fade animate-once animate-duration-1000 animate-delay-750 animate-normal" alt="">
+        {/if}           
+
     </div>
 
-    <div class="col-start-1 col-span-2 row-start-2 mt-5">
+    <div class="col-start-2 row-start-2 text-start mb-[44px]">
+        {#if predi == 0}
+            <div class="text-xl font-semibold">🥵 La croissance de la plante est insuffisante.</div>
+            Les conditions actuelles pourraient être optimisées en ajustant l’arrosage, l’exposition à la lumière, la température du sol ou le niveau d'humidité.
+        {:else if predi == 1}
+            <div class="text-xl font-semibold">🌱✨ La plante se développe sainement !</div>
+            Les conditions environnementales et les soins apportés sont favorables à une croissance optimale.
+        {/if}
+    </div>
+
+    <div class="col-start-1 col-span-2 row-start-3 my-5">
         <Separator class="mb-4 bg-gray-950 px-100"></Separator>
+    </div>
+
+    <div class="col-start-1 col-span-2 row-start-4 text-justify">
+        <div class="text-2xl font-bold mb-3">Introduction</div>
+        <div>
+            Revenons dans le sud de la France avec nos deux amis les bougainvilliers.  L’un est splendide, couvert de fleurs colorées, tandis que l’autre semble fragile, ses feuilles sont fanées et ses branches éparpillées. Pourquoi une telle différence ? La réponse se trouve dans le cycle de vie des plantes et les conditions dont elles ont besoin pour s’épanouir.
+            
+            <br><br>
+
+            Comme tous les êtres vivants, les plantes passent par plusieurs étapes avant d’atteindre leur plein développement. Tout commence avec la germination : sous l’effet de l’humidité et de la chaleur, la graine se réveille et commence à germer. Les premières racines et feuilles apparaissent permettant à la jeune plante d’absorber l’eau, les nutriments et la lumière du soleil pour produire son énergie. Peu à peu, elle renforce ses tiges et développe son feuillage. Puis vient la floraison, le moment où elle s’épanouit pleinement et embellit son environnement.
+        </div>
+
+        <div class="text-2xl font-bold mb-3 mt-5">Comment favoriser une croissance équilibrée et durable ?</div>
+
+        <div>
+            Pour bien grandir, une plante a besoin de plusieurs éléments essentiels : <span class="font-bold">l’eau</span>, <span class="font-bold">la lumière</span>, un <span class="font-bold">sol adapté</span> et un <span class="font-bold">climat favorable</span>. Si elle manque d’eau, elle se dessèche et peine à se nourrir. Si elle ne reçoit pas assez de lumière, elle n’a pas assez d’énergie pour se développer. La nature du sol est aussi importante : il doit retenir l’humidité sans être trop compact pour un bon développement des racines. Enfin, la température et l’humidité de l’air doivent être adaptées à ses besoins, car des changements brusques peuvent perturber sa croissance.
+        </div>
+
+        <div class="text-2xl font-bold mb-3 mt-5">Les secrets d’un bougainvillier épanoui : adapter son environnement pour réussir</div>
+
+        <div>
+            Dans notre jardin, le bougainvillier en difficulté n’a pas toutes ces bonnes conditions. Son sol ne garde pas assez d’humidité, le soleil brûle la plante, et il y a un manque de ressources pour la croissance de la plante. 
+            <br><br>
+            Comprendre ces étapes et ces besoins permet d’expliquer pourquoi certaines plantes s’épanouissent mieux que d’autres. En ajustant les conditions de croissance, comme l’arrosage, l’exposition au soleil, le type de sol ou en ajustant la température et l’humidité. Il est possible de créer un environnement optimal pour les plantes. 
+        </div>
+
+        <div class="text-2xl font-bold mb-3 mt-5">Utilisation de l’outil : Prédiction de croissance</div>
+
+        <div>
+            Cet outil vous permet de simuler la croissance de votre plante en fonction de différents paramètres environnementaux :
+            <br><br>
+                • <span class="font-bold">Type de sol :</span> Composition du sol dans lequel la plante évolue, comprenant le sable, le limon ou l’argile.<br>
+                • <span class="font-bold">Humidité :</span> Taux d'humidité de l’air autour de la plante.<br>
+                • <span class="font-bold">Température :</span> Niveau de chaleur du sol dans lequel la plante se développe.<br>
+                • <span class="font-bold">Exposition au Soleil :</span> Durée et intensité de l’exposition de la plante à la lumière du soleil. <br>
+                • <span class="font-bold">Fréquence d’arrosage :</span> Quotidien, semi-hebdomadaire ou hebdomadaire.
+            <br><br>
+            En fonction des paramètres sélectionnés, la plante pourra être en pleine croissance ou, au contraire, présenter une croissance insuffisante.
+        </div>
     </div>
 
 </div>
