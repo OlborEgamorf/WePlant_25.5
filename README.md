@@ -1,6 +1,10 @@
 # WePlant_25.5
 
-Marathon du web M1 MIASHS UMPV 2025. 
+Projet WePlante pour le Marathon du web M1 MIASHS UMPV 2025. 
+
+Retrouvez l'intégralité des rendus de notre groupe ici : https://www.marathonduweb.fr/blog/2025-11/arrosons-au-plus-juste-33
+
+Ce projet a remporté le premier prix du jury !!
 
 ## Composition du groupe
 
