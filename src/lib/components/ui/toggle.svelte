@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as ToggleGroup from "$lib/components/ui/toggle-group/index.js";
+    import * as ToggleGroup from "#lib/components/ui/toggle-group/index.js";
 
     let { selected = $bindable(), params = $bindable(), image, styles } : {selected?:string, params:Selects[], image?:string[], styles?:string} = $props();
 </script>

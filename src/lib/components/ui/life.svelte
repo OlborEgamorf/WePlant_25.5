@@ -1,18 +1,18 @@
 <script lang="ts">
-    import { Slider } from "$lib/components/ui/slider/index.js";
+    import { Slider } from "#lib/components/ui/slider/index.js";
     import Toggle from "./toggle.svelte";
 
-    import ClayIcon from "$lib/assets/argile.svg";
-    import SandIcon from "$lib/assets/sable.svg";
-    import LoamIcon from "$lib/assets/terre.svg";
+    import ClayIcon from "#lib/assets/argile.svg";
+    import SandIcon from "#lib/assets/sable.svg";
+    import LoamIcon from "#lib/assets/terre.svg";
 
-    import Watch from "$lib/assets/watch.svg";
-    import Clock from "$lib/assets/clock.svg";
-    import Calendar from "$lib/assets/calendar.svg";
+    import Watch from "#lib/assets/watch.svg";
+    import Clock from "#lib/assets/clock.svg";
+    import Calendar from "#lib/assets/calendar.svg";
 
-    import Grow1 from "$lib/assets/grow_1.svg"
-    import Grow3 from "$lib/assets/grow_3.svg"
-    import Grow4 from "$lib/assets/grow_4.svg"
+    import Grow1 from "#lib/assets/grow_1.svg"
+    import Grow3 from "#lib/assets/grow_3.svg"
+    import Grow4 from "#lib/assets/grow_4.svg"
     import Loading from "./loading.svelte";
     import Separator from "./separator/separator.svelte";
 

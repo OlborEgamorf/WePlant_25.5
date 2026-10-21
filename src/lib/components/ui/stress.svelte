@@ -2,12 +2,12 @@
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";
 
-    import Banzai from "$lib/assets/banzai.svg"
-    import Eclair2 from "$lib/assets/thunder.svg"
-    import Fleur from "$lib/assets/flower.svg"
+    import Banzai from "#lib/assets/banzai.svg"
+    import Eclair2 from "#lib/assets/thunder.svg"
+    import Fleur from "#lib/assets/flower.svg"
     import Loading from "./loading.svelte";
 
-    import Evapo from "$lib/assets/explore/evapo.png"
+    import Evapo from "#lib/assets/explore/evapo.png"
 
     let minMoisture:number = 10
     let minTemperture:number = 15

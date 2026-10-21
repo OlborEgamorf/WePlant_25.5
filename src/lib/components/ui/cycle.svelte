@@ -1,23 +1,23 @@
 <script lang="ts">
-    import Pot from "$lib/assets/pot.svg";
-    import PotClay from "$lib/assets/potClay.svg";
-    import PotClayTop from "$lib/assets/potClayTop.svg";
-    import PotLoam from "$lib/assets/potLoam.svg";
-    import PotLoamTop from "$lib/assets/potLoamTop.svg";
-    import PotSand from "$lib/assets/potSand.svg";
-    import PotSandTop from "$lib/assets/potSandTop.svg";
-    import Roots from "$lib/assets/roots.svg";
-    import Tree from "$lib/assets/tree.svg";
-    import ClayIcon from "$lib/assets/argile.svg";
-    import SandIcon from "$lib/assets/sable.svg";
-    import LoamIcon from "$lib/assets/terre.svg";
+    import Pot from "#lib/assets/pot.svg";
+    import PotClay from "#lib/assets/potClay.svg";
+    import PotClayTop from "#lib/assets/potClayTop.svg";
+    import PotLoam from "#lib/assets/potLoam.svg";
+    import PotLoamTop from "#lib/assets/potLoamTop.svg";
+    import PotSand from "#lib/assets/potSand.svg";
+    import PotSandTop from "#lib/assets/potSandTop.svg";
+    import Roots from "#lib/assets/roots.svg";
+    import Tree from "#lib/assets/tree.svg";
+    import ClayIcon from "#lib/assets/argile.svg";
+    import SandIcon from "#lib/assets/sable.svg";
+    import LoamIcon from "#lib/assets/terre.svg";
 
-    import AroVide from "$lib/assets/Arrosoire_totalvide.svg"
-    import AroMid from "$lib/assets/Arrosoire_mi_vide.svg"
-    import AroFull from "$lib/assets/Arrosoire_plein.svg"
-    import AroLil from "$lib/assets/Arrosoire_vide.svg"
+    import AroVide from "#lib/assets/Arrosoire_totalvide.svg"
+    import AroMid from "#lib/assets/Arrosoire_mi_vide.svg"
+    import AroFull from "#lib/assets/Arrosoire_plein.svg"
+    import AroLil from "#lib/assets/Arrosoire_vide.svg"
 
-    import GraphCalc from "$lib/assets/explore/graphs.png"
+    import GraphCalc from "#lib/assets/explore/graphs.png"
     
     import Separator from "./separator/separator.svelte";
     import Slider from "./slider/slider.svelte";

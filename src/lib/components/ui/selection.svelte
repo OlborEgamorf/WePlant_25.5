@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as Select from "$lib/components/ui/select/index.js";
+    import * as Select from "#lib/components/ui/select/index.js";
 
     let { selected = $bindable(), params = $bindable(), placeholder, image } : {selected?: Selected, params: Selects[], placeholder: string, image?: string[]} = $props();
 </script>

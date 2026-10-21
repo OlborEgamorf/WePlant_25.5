@@ -1,10 +1,10 @@
 <script lang="ts">
-    import bambou from "$lib/assets/illustration/bambou.png";
-    import fleur from "$lib/assets/illustration/fleur.png";
-    import fleur2 from "$lib/assets/illustration/fleur2.jpg";
-    import logo from "$lib/assets/illustration/weplante.png";
-    import UPV from "$lib/assets/illustration/upv.png";
-    import MDW from "$lib/assets/illustration/MDW.webp";
+    import bambou from "#lib/assets/illustration/bambou.png";
+    import fleur from "#lib/assets/illustration/fleur.png";
+    import fleur2 from "#lib/assets/illustration/fleur2.jpg";
+    import logo from "#lib/assets/illustration/weplante.png";
+    import UPV from "#lib/assets/illustration/upv.png";
+    import MDW from "#lib/assets/illustration/MDW.webp";
   </script>
   
   <div class="bg-[#EBDC94] relative flex flex-col justify-center items-center min-h-screen">

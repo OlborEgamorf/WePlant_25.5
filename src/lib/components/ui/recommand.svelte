@@ -1,37 +1,37 @@
 <script lang="ts">
-    import * as Tooltip from "$lib/components/ui/tooltip";
+    import * as Tooltip from "#lib/components/ui/tooltip/index.js";
 
-    import miOmbre from "$lib/assets/mi_ombre.svg";
-    import ombre from "$lib/assets/ombre.svg";
-    import soleil from "$lib/assets/soleil.svg";
+    import miOmbre from "#lib/assets/mi_ombre.svg";
+    import ombre from "#lib/assets/ombre.svg";
+    import soleil from "#lib/assets/soleil.svg";
 
-    import arrosoire_mi_plein from "$lib/assets/Arrosoire_mi_vide.svg";
-    import arrosoire_plein from "$lib/assets/Arrosoire_plein.svg";
-    import arrosoire_vide from "$lib/assets/Arrosoire_vide.svg";
+    import arrosoire_mi_plein from "#lib/assets/Arrosoire_mi_vide.svg";
+    import arrosoire_plein from "#lib/assets/Arrosoire_plein.svg";
+    import arrosoire_vide from "#lib/assets/Arrosoire_vide.svg";
 
-    import argile from "$lib/assets/argile.svg";
-    import sable from "$lib/assets/sable.svg";
-    import terre from "$lib/assets/terre.svg";
+    import argile from "#lib/assets/argile.svg";
+    import sable from "#lib/assets/sable.svg";
+    import terre from "#lib/assets/terre.svg";
 
-    import gant from "$lib/assets/gant.svg";
-    import rateau from "$lib/assets/rateau.svg";
-    import secateur from "$lib/assets/secateur.svg";
+    import gant from "#lib/assets/gant.svg";
+    import rateau from "#lib/assets/rateau.svg";
+    import secateur from "#lib/assets/secateur.svg";
 
-    import automne from "$lib/assets/automne.svg";
-    import hivers from "$lib/assets/hivers.svg";
-    import printemps from "$lib/assets/printemps.svg";
+    import automne from "#lib/assets/automne.svg";
+    import hivers from "#lib/assets/hivers.svg";
+    import printemps from "#lib/assets/printemps.svg";
 
-    import annuelles from "$lib/assets/annuelle.svg";
-    import bulbes from "$lib/assets/bulbe.svg";
-    import cactus from "$lib/assets/cactus.svg";
-    import grimpantes from "$lib/assets/climbing.svg";
-    import herbes from "$lib/assets/herb.svg";
-    import roses from "$lib/assets/rose.svg";
-    import arbustes from "$lib/assets/treeRec.svg";
-    import vivaces from "$lib/assets/vivaces.svg";
+    import annuelles from "#lib/assets/annuelle.svg";
+    import bulbes from "#lib/assets/bulbe.svg";
+    import cactus from "#lib/assets/cactus.svg";
+    import grimpantes from "#lib/assets/climbing.svg";
+    import herbes from "#lib/assets/herb.svg";
+    import roses from "#lib/assets/rose.svg";
+    import arbustes from "#lib/assets/treeRec.svg";
+    import vivaces from "#lib/assets/vivaces.svg";
 
-    import Bot from "$lib/assets/botChat.svg"
-    import Flower from "$lib/assets/flowerChat.svg"
+    import Bot from "#lib/assets/botChat.svg"
+    import Flower from "#lib/assets/flowerChat.svg"
 
     import Input from "./input/input.svelte";
     import Selection from "./selection.svelte";
